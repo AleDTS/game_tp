@@ -3,12 +3,15 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class GameRun extends GameBase {
+	public static int MAX_BOMBS = 5;
 	public static int TOP_BOUND = 0;
 	public static int BOTTOM_BOUND = 600;
 	public static int LEFT_BOUND = 0;
 	public static int RIGHT_BOUND = 600;
+	//int cont_bombs;
 	Bomber bomber = new Bomber();
 	Background bg = new Background();
+	Bomb[] bomb = new Bomb[MAX_BOMBS];
 
 	public void init(){
 		addKeys(key);
@@ -37,7 +40,7 @@ public class GameRun extends GameBase {
 	    	bomber.dropBomb();
 	    }
 	    void tests(){
-	    	System.out.println(bomber.posX + " "+ bomber.posY);
+	    	//System.out.println(bomber.posX + " "+ bomber.posY);
 	    	bomber.reset();
 	    	bomber.colided(bomber.bomb, Bomb.qte);
 	    }

@@ -27,6 +27,7 @@ public class Bomber extends Interactible {
 	public void moveLeft(int bound){
 		if (posX > bound && !left)
 		posX -= intensity;
+	
 	}
 
 	public void dropBomb(){
