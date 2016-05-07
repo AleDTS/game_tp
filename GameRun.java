@@ -9,6 +9,7 @@ public class GameRun extends GameBase {
 	public static int LEFT_BOUND = 0;
 	public static int RIGHT_BOUND = 600;
 	//int cont_bombs;
+	// teste
 	Bomber bomber = new Bomber();
 	Background bg = new Background();
 	Bomb[] bomb = new Bomb[MAX_BOMBS];
