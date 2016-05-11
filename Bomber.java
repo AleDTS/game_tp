@@ -3,7 +3,6 @@ public class Bomber extends Interactible {
 	public static final int MAX_BOMBS = 5;
 	int intensity = 10;
 	int cont_bombs;
-	//Bomb[] bomb = new Bomb[BOMB_MAX];
 
 	public Bomber(){
 		cont_bombs = posX = posY = 0;
@@ -32,7 +31,7 @@ public class Bomber extends Interactible {
 	public boolean dropBomb(Bomb bomb){
 		if (cont_bombs < MAX_BOMBS){
 			//bomb[cont_bombs] = new Bomb();
-			//bomb.drop(posX, posY);
+			bomb.drop(this.posX, this.posY);
 			//cont_bombs++;
 			//System.out.println(bomb.posX+" "+
 	    	//					bomb.posY);

@@ -15,20 +15,18 @@ public class GameRun extends GameBase {
 	Bomber bomber = new Bomber();
 	Background bg = new Background();
 	Bomb[] bomb = new Bomb[MAX_BOMBS];
-	//ArrayList<Bomb> bomb_mem = new ArrayList<Bomb>(MAX_BOMBS);
-	//ArrayList<Bomb> bomb = new ArrayList<Bomb>();
 
 	public void init(){
-		for (Bomb i: bomb)
-			i = new Bomb();
+		for (int i=0; i<bomb.length; i++)
+			bomb[i] = new Bomb();
 		addKeys(key);
 	}
 
 	public void paint(Graphics g){
 		bg.draw(g);
 		if (cont_bombs > 0)
-		for (Bomb i: bomb)
-			i.draw(g);
+		for (int i=0; i<bomb.length; i++)
+			bomb[i].draw(g);
 		bomber.draw(g);
 	}
 	
@@ -51,8 +49,8 @@ public class GameRun extends GameBase {
 	    }
 	    void tests(){
 	    	//System.out.println(bomber.posX + " "+ bomber.posY);
-	    	//bomber.reset();
-	    	//bomber.colided(bomber.bomb, Bomb.qte);
+	    	bomber.reset();
+	    	bomber.colided(bomb);
 	    }
 	};
 

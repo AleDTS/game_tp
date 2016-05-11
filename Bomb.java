@@ -3,7 +3,6 @@ import java.io.*;
 import javax.imageio.*;
 
 public class Bomb extends Interactible{
-	//public static int qte = 0;
 	public static Image img;
 	public int tempo;
 
@@ -22,9 +21,11 @@ public class Bomb extends Interactible{
      	//System.out.println(height+" "+width);
 	}
 
+	/*
 	public void draw(Graphics g){
 		g.drawImage(img, posX, posY, this);
 	}
+	*/
 
 	public void drop(int posX, int posY){
 		this.posY = posY;

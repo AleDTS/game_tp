@@ -19,14 +19,21 @@ public class Interactible extends JPanel {
       	}
 	}
 
+	void loadImage(String name, Image img){
+		try {
+        	img = ImageIO.read(new File(name));
+      	} catch (IOException e) {
+	      	System.out.println("Nao foi possivel carregar " + name);
+	        System.exit(1);
+      	}
+	}
+
 	public void draw(Graphics g){
 		g.drawImage(img, posX, posY, this);
 	}
 
-
-	public void draw(Graphics g, Interactible[] obj){
-		for(int i = 0; i<obj.length; i++)
-			g.drawImage(obj[i].img, obj[i].posX, obj[i].posY, this);
+	public void draw(Graphics g, Image i){
+		g.drawImage(i, posX, posY, this);
 	}
 
 	public void colided(Interactible obj){
