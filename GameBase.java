@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -100,7 +101,7 @@ public class GameBase extends Canvas{
 			repaint();
 			//System.out.println(frame);
 			frame++;
-			if (frame == 31) frame = 0;
+			if (frame == (FPS+1)) frame = 0;
 		}
 	}
 

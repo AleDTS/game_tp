@@ -4,10 +4,10 @@ import java.io.*;
 import java.awt.image.*;
 import javax.swing.*;
 
-public class Interactible extends JPanel{
+public class Interactible extends JPanel {
 	Image img;
 	int height, width;
-	int posX, posY;
+	int posX = 0, posY = 0;
 	boolean top, bottom, right, left;
 	
 	void loadImage(String name){
@@ -24,8 +24,8 @@ public class Interactible extends JPanel{
 	}
 
 
-	public void draw(Graphics g, Interactible[] obj, int qte){
-		for(int i = 0; i<qte; i++)
+	public void draw(Graphics g, Interactible[] obj){
+		for(int i = 0; i<obj.length; i++)
 			g.drawImage(obj[i].img, obj[i].posX, obj[i].posY, this);
 	}
 
@@ -65,13 +65,13 @@ public class Interactible extends JPanel{
 		//return (obj.colided = (top||bottom||right||left));
 	}
 
-	public void colided(Interactible[] obj, int max){
+	public void colided(Interactible[] obj){
 		int x, y, w, h;
 		int i;
 		
 		//top = bottom = right = left = false;
 
-		for (i=0; i<max; i++){
+		for (i=0; i<obj.length; i++){
 			x = obj[i].posX;
 			y = obj[i].posY;
 			h = obj[i].height;

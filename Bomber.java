@@ -1,9 +1,9 @@
 
 public class Bomber extends Interactible {
-	final int BOMB_MAX = 5;
+	public static final int MAX_BOMBS = 5;
 	int intensity = 10;
 	int cont_bombs;
-	Bomb[] bomb = new Bomb[BOMB_MAX];
+	//Bomb[] bomb = new Bomb[BOMB_MAX];
 
 	public Bomber(){
 		cont_bombs = posX = posY = 0;
@@ -27,15 +27,19 @@ public class Bomber extends Interactible {
 	public void moveLeft(int bound){
 		if (posX > bound && !left)
 		posX -= intensity;
-	
 	}
 
-	public void dropBomb(){
-		if (cont_bombs < BOMB_MAX){
-			bomb[cont_bombs] = new Bomb();
-			bomb[cont_bombs].drop(posX, posY);
-			cont_bombs++;
+	public boolean dropBomb(Bomb bomb){
+		if (cont_bombs < MAX_BOMBS){
+			//bomb[cont_bombs] = new Bomb();
+			//bomb.drop(posX, posY);
+			//cont_bombs++;
+			//System.out.println(bomb.posX+" "+
+	    	//					bomb.posY);
+			return true;
 		}
+		else
+			return false;
 		//for(int i = 0; i < Bomb.qte && Bomb.qte != 0 ; i++)
 		//System.out.println(i+"-"+bomb[i].posX+","+bomb[i].posY);
 	}
