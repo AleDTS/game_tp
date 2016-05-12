@@ -2,10 +2,8 @@
 public class Bomber extends Interactible {
 	public static final int MAX_BOMBS = 5;
 	int intensity = 10;
-	int cont_bombs;
 
-	public Bomber(){
-		cont_bombs = posX = posY = 0;
+	public Bomber(){posX = posY = 0;
 		loadImage("bomber.png");
       	height = img.getHeight(this);
      	width = img.getHeight(this);
@@ -28,19 +26,8 @@ public class Bomber extends Interactible {
 		posX -= intensity;
 	}
 
-	public boolean dropBomb(Bomb bomb){
-		if (cont_bombs < MAX_BOMBS){
-			//bomb[cont_bombs] = new Bomb();
+	public void dropBomb(Bomb bomb){
 			bomb.drop(this.posX, this.posY);
-			//cont_bombs++;
-			//System.out.println(bomb.posX+" "+
-	    	//					bomb.posY);
-			return true;
-		}
-		else
-			return false;
-		//for(int i = 0; i < Bomb.qte && Bomb.qte != 0 ; i++)
-		//System.out.println(i+"-"+bomb[i].posX+","+bomb[i].posY);
 	}
 
 	public void reset(){

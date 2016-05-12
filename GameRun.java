@@ -11,7 +11,6 @@ public class GameRun extends GameBase {
 	public static int LEFT_BOUND = 0;
 	public static int RIGHT_BOUND = 600;
 	int cont_bombs = 0;
-	int visible_bombs = 0;
 	Bomber bomber = new Bomber();
 	Background bg = new Background();
 	Bomb[] bomb = new Bomb[MAX_BOMBS];
@@ -24,8 +23,7 @@ public class GameRun extends GameBase {
 
 	public void paint(Graphics g){
 		bg.draw(g);
-		if (cont_bombs > 0)
-		for (int i=0; i<bomb.length; i++)
+		for (int i=0; i<cont_bombs; i++)
 			bomb[i].draw(g);
 		bomber.draw(g);
 	}
@@ -44,8 +42,8 @@ public class GameRun extends GameBase {
 	    	bomber.moveLeft(LEFT_BOUND);
 	    }
 	    void action(){
-	    	if (bomber.dropBomb(bomb[cont_bombs]))
-	    		cont_bombs++;
+	    	if (cont_bombs < MAX_BOMBS)
+	    		bomber.dropBomb(bomb[cont_bombs++]);
 	    }
 	    void tests(){
 	    	//System.out.println(bomber.posX + " "+ bomber.posY);

@@ -7,7 +7,7 @@ import javax.swing.*;
 public class Interactible extends JPanel {
 	Image img;
 	int height, width;
-	int posX = 0, posY = 0;
+	int posX, posY;
 	boolean top, bottom, right, left;
 	
 	void loadImage(String name){
@@ -30,10 +30,6 @@ public class Interactible extends JPanel {
 
 	public void draw(Graphics g){
 		g.drawImage(img, posX, posY, this);
-	}
-
-	public void draw(Graphics g, Image i){
-		g.drawImage(i, posX, posY, this);
 	}
 
 	public void colided(Interactible obj){
