@@ -9,28 +9,28 @@ public class Bomber extends Interactible {
      	width = img.getHeight(this);
 	}
 
-	public void moveUp(int bound){
+	public synchronized void moveUp(int bound){
 		if (posY > bound && !top)
 		posY -= intensity;
 	}
-	public void moveDown(int bound){
+	public synchronized void moveDown(int bound){
 		if (posY < (bound - height) && !bottom)
 		posY += intensity;
 	}
-	public void moveRight(int bound){
+	public synchronized void moveRight(int bound){
 		if (posX < (bound - width) && !right)
 		posX += intensity;
 	}
-	public void moveLeft(int bound){
+	public synchronized void moveLeft(int bound){
 		if (posX > bound && !left)
 		posX -= intensity;
 	}
 
-	public void dropBomb(Bomb bomb){
+	public synchronized void dropBomb(Bomb bomb){
 			bomb.drop(this.posX, this.posY);
 	}
 
-	public void reset(){
+	public synchronized void reset(){
 		top = bottom = right = left = false;
 	}
 }

@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -18,7 +17,51 @@ public class GameRun extends GameBase {
 	public void init(){
 		for (int i=0; i<bomb.length; i++)
 			bomb[i] = new Bomb();
-		addKeys(key);
+
+		addKeys(new Keys((int)KeyEvent.VK_RIGHT){
+			void action(){
+				bomber.moveRight(RIGHT_BOUND);
+	    		bomber.reset();
+	    		bomber.colided(bomb);
+			}
+		});
+
+		addKeys(new Keys((int)KeyEvent.VK_DOWN){
+			void action(){
+				bomber.moveDown(BOTTOM_BOUND);
+	    		bomber.reset();
+	    		bomber.colided(bomb);
+			}
+		});
+
+		addKeys(new Keys((int)KeyEvent.VK_UP){
+			void action(){
+				bomber.moveUp(TOP_BOUND);
+	    		bomber.reset();
+	    		bomber.colided(bomb);
+			}
+		});
+
+		addKeys(new Keys((int)KeyEvent.VK_LEFT){
+			void action(){
+				bomber.moveLeft(LEFT_BOUND);
+	    		bomber.reset();
+	    		bomber.colided(bomb);
+			}
+		});
+
+		addKeys(new Keys((int)KeyEvent.VK_SPACE){
+			void action(){
+				bomber.moveDown(BOTTOM_BOUND);
+				if (cont_bombs < MAX_BOMBS)
+	    			bomber.dropBomb(bomb[cont_bombs++]);
+	    		System.out.println("hey");
+	    		bomber.reset();
+	    		bomber.colided(bomb);
+			}
+		});
+
+		//addKeys(key);
 	}
 
 	public void paint(Graphics g){
@@ -27,7 +70,8 @@ public class GameRun extends GameBase {
 			bomb[i].draw(g);
 		bomber.draw(g);
 	}
-	
+
+	/*
 	Keys key = new Keys(){
 		void up(){
 			bomber.moveUp(TOP_BOUND);
@@ -51,6 +95,7 @@ public class GameRun extends GameBase {
 	    	bomber.colided(bomb);
 	    }
 	};
+	*/
 
 	public static void main(String[] args) {
 		GameBase run = new GameRun();

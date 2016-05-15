@@ -15,14 +15,18 @@ class Start extends JFrame {
 		pack();
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		addKeyListener(base.key);
+		for (int i=0; i<base.keys; i++){
+			addKeyListener(base.key[i]);
+			System.out.println(base.key[i].keyCode);
+		}
 	}
 }
 
 public class GameBase extends Canvas{
 	final int FPS = 30;
+	static int keys = 0;
 	int width = 600, height = 600;
-	Keys key = null;
+	Keys[] key = new Keys[5];
 
 	Image offscreen = null;
 	Graphics offgraphics = null;
@@ -33,13 +37,10 @@ public class GameBase extends Canvas{
 	}
 
 	public void paint(Graphics g) {}
-	public void init() {
-		
-	}
+	public void init() {}
 
 	public void addKeys(Keys key){
-		this.key = key;
-		addKeyListener(key);
+		this.key[keys++] = key;
 	}
 
 	public void update(Graphics g) {
@@ -56,36 +57,22 @@ public class GameBase extends Canvas{
 		g.drawImage(offscreen, 0, 0, null);
 	}
 
-	class Keys extends KeyAdapter {
-		int code;
-	    public void keyPressed(KeyEvent e){	    	
+	class Keys extends KeyAdapter{
+		int keyCode ;
 
-	    switch (e.getKeyCode()){
-	        case KeyEvent.VK_LEFT:
-				left();
-				break;
-	        case KeyEvent.VK_RIGHT:
-         		right();
-				break;
-	        case KeyEvent.VK_UP:
-		        up();
-				break;
-	        case KeyEvent.VK_DOWN:
-       			down();
-				break;
-      		case KeyEvent.VK_SPACE:
-       			action();
-				break;
-      		}
-      		tests();
+		public Keys(int code){
+			keyCode = code;
+			//System.out.println(keyCode);
 		}
 
-	    void up(){}
-	    void down(){}
-	    void right(){}
-	    void left(){}
+	    public synchronized void keyPressed(KeyEvent e){	 
+	    	//System.out.println(e.KEY_PRESSED);
+	    	if (e.getKeyCode() == keyCode){
+	    		action();
+	    	}
+		}
+
 	    void action(){}
-	    void tests(){}
 	}
 	
 	class Frame implements ActionListener {
