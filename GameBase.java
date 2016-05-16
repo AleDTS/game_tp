@@ -1,10 +1,11 @@
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.imageio.*;
 import java.io.*;
 import java.awt.image.*;
+import java.util.*;
+import javax.swing.Timer;
 
 class Start extends JFrame {
 
@@ -15,18 +16,14 @@ class Start extends JFrame {
 		pack();
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		for (int i=0; i<base.keys; i++){
-			addKeyListener(base.key[i]);
-			System.out.println(base.key[i].keyCode);
-		}
+		addKeyListener(base.key);
 	}
 }
 
 public class GameBase extends Canvas{
 	final int FPS = 30;
-	static int keys = 0;
 	int width = 600, height = 600;
-	Keys[] key = new Keys[5];
+	Keys key = null;
 
 	Image offscreen = null;
 	Graphics offgraphics = null;
@@ -40,7 +37,7 @@ public class GameBase extends Canvas{
 	public void init() {}
 
 	public void addKeys(Keys key){
-		this.key[keys++] = key;
+		this.key = key;
 	}
 
 	public void update(Graphics g) {
@@ -58,21 +55,53 @@ public class GameBase extends Canvas{
 	}
 
 	class Keys extends KeyAdapter{
-		int keyCode ;
+		Map<Integer, Boolean> key = new HashMap<Integer,Boolean>();
 
-		public Keys(int code){
-			keyCode = code;
-			//System.out.println(keyCode);
+		public Keys(int[] code){
+
+			for (int i=0; i<code.length; i++)
+				key.put(code[i], false);
 		}
 
-	    public synchronized void keyPressed(KeyEvent e){	 
-	    	//System.out.println(e.KEY_PRESSED);
-	    	if (e.getKeyCode() == keyCode){
-	    		action();
-	    	}
+	    public synchronized void  keyPressed(KeyEvent e){
+	    	Iterator<Map.Entry<Integer, Boolean>> i = key.entrySet().iterator();
+	    		//for (Map.Entry<Integer, Boolean> k : key.entrySet())
+	    		//	System.out.println(k.getValue());
+        	while(i.hasNext()){
+            	Map.Entry<Integer, Boolean> entry = i.next();
+            	if(entry.getKey() == e.getKeyCode()){
+		        	entry.setValue(true);
+            		//key.put(e.getKeyCode(), true);
+            	}
+	        }
+
 		}
 
-	    void action(){}
+		public synchronized void keyReleased(KeyEvent e){	 
+			Iterator<Map.Entry<Integer, Boolean>> i = key.entrySet().iterator();
+        	while(i.hasNext()){
+            	Map.Entry<Integer, Boolean> entry = i.next();
+            	if(entry.getKey() == e.getKeyCode()){
+		        	entry.setValue(false);
+            		//key.put(e.getKeyCode(), false);
+            	}
+	        }
+		}
+
+		public synchronized Boolean isPressed(int code){
+			
+			for (Map.Entry<Integer, Boolean> k : key.entrySet()){
+	    		if (k.getKey() == code){
+        				System.out.println(k.getKey() + " " + k.getValue());
+        			if (k.getValue() == true){
+	    			return k.getValue();
+        			}
+	    		}
+			}
+	    	return false;
+			
+		}
+
 	}
 	
 	class Frame implements ActionListener {
