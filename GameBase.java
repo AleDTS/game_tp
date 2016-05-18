@@ -56,6 +56,8 @@ public class GameBase extends Canvas{
 
 	class Keys extends KeyAdapter{
 		Map<Integer, Boolean> key = new HashMap<Integer,Boolean>();
+    	Iterator<Map.Entry<Integer, Boolean>> i;
+    	Map.Entry<Integer, Boolean> entry;
 
 		public Keys(int[] code){
 			for (int i=0; i<code.length; i++)
@@ -63,9 +65,9 @@ public class GameBase extends Canvas{
 		}
 
 	    public void  keyPressed(KeyEvent e){
-	    	Iterator<Map.Entry<Integer, Boolean>> i = key.entrySet().iterator();
+	    	i = key.entrySet().iterator();
         	while(i.hasNext()){
-            	Map.Entry<Integer, Boolean> entry = i.next();
+            	entry = i.next();
             	if(entry.getKey() == e.getKeyCode()){
 		        	entry.setValue(true);
             		//key.put(e.getKeyCode(), true);
@@ -75,9 +77,9 @@ public class GameBase extends Canvas{
 		}
 
 		public void keyReleased(KeyEvent e){	 
-			Iterator<Map.Entry<Integer, Boolean>> i = key.entrySet().iterator();
+			i = key.entrySet().iterator();
         	while(i.hasNext()){
-            	Map.Entry<Integer, Boolean> entry = i.next();
+            	entry = i.next();
             	if(entry.getKey() == e.getKeyCode()){
 		        	entry.setValue(false);
             		//key.put(e.getKeyCode(), false);
@@ -98,9 +100,9 @@ public class GameBase extends Canvas{
 		}
 
 		public void button(int code){
-			Iterator<Map.Entry<Integer, Boolean>> i = key.entrySet().iterator();
+			i = key.entrySet().iterator();
         	while(i.hasNext()){
-            	Map.Entry<Integer, Boolean> entry = i.next();
+            	entry = i.next();
             	if(entry.getKey() == code){
 		        	entry.setValue(false);
             		//key.put(e.getKeyCode(), true);
