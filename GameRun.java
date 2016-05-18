@@ -21,7 +21,7 @@ public class GameRun extends GameBase {
 	public void init(){
 		for (int i=0; i<bomb.length; i++)
 			bomb[i] = new Bomb();
-		addKeys(new Keys(keys));
+		addKeys(key);
 	}
 
 	public void paint(Graphics g){
@@ -35,9 +35,11 @@ public class GameRun extends GameBase {
 			bomber.moveUp(TOP_BOUND);
 		if(key.isPressed(keys[3]))
 			bomber.moveDown(BOTTOM_BOUND);
-		if(key.isPressed(keys[4]))
+		if(key.isPressed(keys[4])){
 			if (cont_bombs < MAX_BOMBS)
     			bomber.dropBomb(bomb[cont_bombs++]);
+			key.button(keys[4]);
+		}
 		
 		bomber.reset();
 	    bomber.colided(bomb);
@@ -47,32 +49,6 @@ public class GameRun extends GameBase {
 			bomb[i].draw(g);
 		bomber.draw(g);
 	}
-
-	/*
-	Keys key = new Keys(){
-		void up(){
-			bomber.moveUp(TOP_BOUND);
-		}
-	    void down(){
-	    	bomber.moveDown(BOTTOM_BOUND);
-	    }
-	    void right(){
-	    	bomber.moveRight(RIGHT_BOUND);
-	    }
-	    void left(){
-	    	bomber.moveLeft(LEFT_BOUND);
-	    }
-	    void action(){
-	    	if (cont_bombs < MAX_BOMBS)
-	    		bomber.dropBomb(bomb[cont_bombs++]);
-	    }
-	    void tests(){
-	    	//System.out.println(bomber.posX + " "+ bomber.posY);
-	    	bomber.reset();
-	    	bomber.colided(bomb);
-	    }
-	};
-	*/
 
 	public static void main(String[] args) {
 		GameBase run = new GameRun();

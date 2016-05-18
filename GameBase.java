@@ -58,15 +58,12 @@ public class GameBase extends Canvas{
 		Map<Integer, Boolean> key = new HashMap<Integer,Boolean>();
 
 		public Keys(int[] code){
-
 			for (int i=0; i<code.length; i++)
 				key.put(code[i], false);
 		}
 
-	    public synchronized void  keyPressed(KeyEvent e){
+	    public void  keyPressed(KeyEvent e){
 	    	Iterator<Map.Entry<Integer, Boolean>> i = key.entrySet().iterator();
-	    		//for (Map.Entry<Integer, Boolean> k : key.entrySet())
-	    		//	System.out.println(k.getValue());
         	while(i.hasNext()){
             	Map.Entry<Integer, Boolean> entry = i.next();
             	if(entry.getKey() == e.getKeyCode()){
@@ -77,7 +74,7 @@ public class GameBase extends Canvas{
 
 		}
 
-		public synchronized void keyReleased(KeyEvent e){	 
+		public void keyReleased(KeyEvent e){	 
 			Iterator<Map.Entry<Integer, Boolean>> i = key.entrySet().iterator();
         	while(i.hasNext()){
             	Map.Entry<Integer, Boolean> entry = i.next();
@@ -88,18 +85,27 @@ public class GameBase extends Canvas{
 	        }
 		}
 
-		public synchronized Boolean isPressed(int code){
-			
+		public Boolean isPressed(int code){
 			for (Map.Entry<Integer, Boolean> k : key.entrySet()){
 	    		if (k.getKey() == code){
-        				System.out.println(k.getKey() + " " + k.getValue());
+        				//System.out.println(k.getKey() + " " + k.getValue());
         			if (k.getValue() == true){
 	    			return k.getValue();
         			}
 	    		}
 			}
 	    	return false;
-			
+		}
+
+		public void button(int code){
+			Iterator<Map.Entry<Integer, Boolean>> i = key.entrySet().iterator();
+        	while(i.hasNext()){
+            	Map.Entry<Integer, Boolean> entry = i.next();
+            	if(entry.getKey() == code){
+		        	entry.setValue(false);
+            		//key.put(e.getKeyCode(), true);
+            	}
+	        }
 		}
 
 	}

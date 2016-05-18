@@ -1,7 +1,7 @@
 
 public class Bomber extends Interactible {
-	public static final int MAX_BOMBS = 5;
-	int intensity = 10;
+	public static final int MAX_BOMBS = 7;
+	int intensity = 5;
 
 	public Bomber(){posX = posY = 0;
 		loadImage("bomber.png");
