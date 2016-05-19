@@ -21,7 +21,7 @@ class Start extends JFrame {
 }
 
 public class GameBase extends Canvas{
-	final int FPS = 30;
+	final int FPS = 60;
 	int width = 850, height = 650;
 	Keys key = null;
 
@@ -92,7 +92,7 @@ public class GameBase extends Canvas{
 	    		if (k.getKey() == code){
         				//System.out.println(k.getKey() + " " + k.getValue());
         			if (k.getValue() == true){
-	    			return k.getValue();
+		    			return k.getValue();
         			}
 	    		}
 			}

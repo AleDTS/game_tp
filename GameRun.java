@@ -15,42 +15,57 @@ public class GameRun extends GameBase {
 	Keys key = new Keys(keys);
 
 	Bomber bomber = new Bomber();
-	Background bg = new Background();
+	Background bg;
 	Bomb[] bomb = new Bomb[MAX_BOMBS];
-	StaticWall walls = new StaticWall(width, height);
+	//StaticWall walls = new StaticWall(width, height);
 
 	public void init(){
+		bg = new Background(BOTTOM_BOUND/50, RIGHT_BOUND/50);
 		for (int i=0; i<bomb.length; i++)
 			bomb[i] = new Bomb();
 		addKeys(key);
 	}
 
-	public void paint(Graphics g){
-		Boolean b = false;
+	public void keys(){
+		boolean up, down, right, left, space;
 
-		if(key.isPressed(keys[0]))
+		right = key.isPressed(keys[0]);
+		left = key.isPressed(keys[1]);
+		up = key.isPressed(keys[2]);
+		down = key.isPressed(keys[3]);
+		space = key.isPressed(keys[4]);
+		
+		if(right && !bomber.oneDirection())
 			bomber.moveRight(RIGHT_BOUND);
-		if(key.isPressed(keys[1]))
+			else bomber.isMovingRight = false;
+		if(left && !bomber.oneDirection())
 			bomber.moveLeft(LEFT_BOUND);
-		if(key.isPressed(keys[2]))
+			else bomber.isMovingLeft = false;
+		if(up && !bomber.oneDirection())
 			bomber.moveUp(TOP_BOUND);
-		if(key.isPressed(keys[3]))
+			else bomber.isMovingUp = false;
+		if(down && !bomber.oneDirection())
 			bomber.moveDown(BOTTOM_BOUND);
-		if(key.isPressed(keys[4])){
-			if (cont_bombs < MAX_BOMBS && !(b = bomber.colided(bomb)))
+			else bomber.isMovingDown = false;
+
+		if(space){
+			if (cont_bombs < MAX_BOMBS )
     			bomber.dropBomb(bomb[cont_bombs++]);
 			key.button(keys[4]);
-			System.out.println(b);
 		}
+	}
 
+	public void paint(Graphics g){
+		keys();
+		
 		bomber.reset();
 	    bomber.colided(bomb);
+	    bg.hitWall(bomber);
 
 		bg.draw(g);
 		for (int i=0; i<cont_bombs; i++)
 			bomb[i].draw(g);
 		bomber.draw(g);
-		walls.draw(g);
 	}
 
 	public static void main(String[] args) {

@@ -18,7 +18,6 @@ public class Bomb extends Interactible{
       	
       	height = img.getHeight(this);
      	width = img.getHeight(this);
-     	//System.out.println(height+" "+width);
 	}
 
 	public void draw(Graphics g){
@@ -29,7 +28,6 @@ public class Bomb extends Interactible{
 	public void drop(int posX, int posY){
 		this.posY = posY;
 		this.posX = posX;
-		//qte++;
 	}
 
 }

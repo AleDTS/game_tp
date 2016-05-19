@@ -25,7 +25,7 @@ public class StaticWall extends Interactible {
 		}
 	}
 
-	public void draw(Graphics g){
+	public void draw(Graphics g) {
 		for (int i=0; i<lin; i++)
 			for (int j=0; j<col; j++)
 				g.drawImage(img, i*width*matrix[i][j], j*height*matrix[i][j], this);

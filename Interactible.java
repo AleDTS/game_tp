@@ -36,8 +36,6 @@ public class Interactible extends JPanel {
 	}
 
 	public boolean colided(int x, int y, int h, int w){
-		
-		top = bottom = right = left = false;
 
 		if (posX == (x+w)){
 			if  ((y <= posY && posY < (y+h)) ||
@@ -46,19 +44,19 @@ public class Interactible extends JPanel {
 			}
 		}
 
-		else if ((posX + width) == x){
+		if ((posX + width) == x){
 			if  ((y <= posY && posY < (y+h)) ||
 				(y < (posY+height) && (posY+height) <= (y+h)))
 				right = true;
 		}
 
-		else if (posY == (y+h)){
+		if (posY == (y+h)){
 			if  ((x <= posX && posX < (x+w)) ||
 				(x < (posX+width) && (posX+width) <= (x+w)))
 				top = true;
 		}
 
-		else if ((posY+h) == y){
+		if ((posY+h) == y){
 			if  ((x <= posX && posX < (x+w)) ||
 				(x < (posX+width) && (posX+width) <= (x+w)))
 				bottom = true;
@@ -70,8 +68,6 @@ public class Interactible extends JPanel {
 	public boolean colided(Interactible[] obj){
 		int x, y, w, h;
 		int i;
-		
-		top = bottom = right = left = false;
 
 		for (i=0; i<obj.length; i++){
 			x = obj[i].posX;
@@ -104,7 +100,6 @@ public class Interactible extends JPanel {
 					bottom = true;
 			}
 		}
-			return (top||bottom||right||left);
+		return (top||bottom||right||left);
 	}
-
 }
