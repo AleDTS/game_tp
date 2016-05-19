@@ -22,7 +22,7 @@ class Start extends JFrame {
 
 public class GameBase extends Canvas{
 	final int FPS = 30;
-	int width = 600, height = 600;
+	int width = 850, height = 650;
 	Keys key = null;
 
 	Image offscreen = null;

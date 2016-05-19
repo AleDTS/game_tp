@@ -6,9 +6,9 @@ import java.util.*;
 public class GameRun extends GameBase {
 	public static int MAX_BOMBS = 5;
 	public static int TOP_BOUND = 0;
-	public static int BOTTOM_BOUND = 600;
+	public static int BOTTOM_BOUND = 650;
 	public static int LEFT_BOUND = 0;
-	public static int RIGHT_BOUND = 600;
+	public static int RIGHT_BOUND = 850;
 	int cont_bombs = 0;
 	KeyEvent k;
 	int[] keys = {k.VK_RIGHT, k.VK_LEFT, k.VK_UP, k.VK_DOWN, k.VK_SPACE};
@@ -17,6 +17,7 @@ public class GameRun extends GameBase {
 	Bomber bomber = new Bomber();
 	Background bg = new Background();
 	Bomb[] bomb = new Bomb[MAX_BOMBS];
+	StaticWall walls = new StaticWall(width, height);
 
 	public void init(){
 		for (int i=0; i<bomb.length; i++)
@@ -25,7 +26,7 @@ public class GameRun extends GameBase {
 	}
 
 	public void paint(Graphics g){
-
+		Boolean b = false;
 
 		if(key.isPressed(keys[0]))
 			bomber.moveRight(RIGHT_BOUND);
@@ -36,11 +37,12 @@ public class GameRun extends GameBase {
 		if(key.isPressed(keys[3]))
 			bomber.moveDown(BOTTOM_BOUND);
 		if(key.isPressed(keys[4])){
-			if (cont_bombs < MAX_BOMBS)
+			if (cont_bombs < MAX_BOMBS && !(b = bomber.colided(bomb)))
     			bomber.dropBomb(bomb[cont_bombs++]);
 			key.button(keys[4]);
+			System.out.println(b);
 		}
-		
+
 		bomber.reset();
 	    bomber.colided(bomb);
 
@@ -48,6 +50,7 @@ public class GameRun extends GameBase {
 		for (int i=0; i<cont_bombs; i++)
 			bomb[i].draw(g);
 		bomber.draw(g);
+		walls.draw(g);
 	}
 
 	public static void main(String[] args) {

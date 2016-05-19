@@ -17,6 +17,9 @@ public class Interactible extends JPanel {
 	      	System.out.println("Nao foi possivel carregar " + name);
 	        System.exit(1);
       	}
+
+      	height = img.getHeight(this);
+     	width = img.getHeight(this);
 	}
 
 	void loadImage(String name, Image img){
@@ -32,13 +35,9 @@ public class Interactible extends JPanel {
 		g.drawImage(img, posX, posY, this);
 	}
 
-	public void colided(Interactible obj){
-		int x = obj.posX;
-		int y = obj.posY;
-		int h = obj.height;
-		int w = obj.width;
+	public boolean colided(int x, int y, int h, int w){
 		
-		//top = bottom = right = left = false;
+		top = bottom = right = left = false;
 
 		if (posX == (x+w)){
 			if  ((y <= posY && posY < (y+h)) ||
@@ -65,14 +64,14 @@ public class Interactible extends JPanel {
 				bottom = true;
 		}
 
-		//return (obj.colided = (top||bottom||right||left));
+		return (top||bottom||right||left);
 	}
 
-	public void colided(Interactible[] obj){
+	public boolean colided(Interactible[] obj){
 		int x, y, w, h;
 		int i;
 		
-		//top = bottom = right = left = false;
+		top = bottom = right = left = false;
 
 		for (i=0; i<obj.length; i++){
 			x = obj[i].posX;
@@ -104,8 +103,8 @@ public class Interactible extends JPanel {
 					(x < (posX+width) && (posX+width) <= (x+w)))
 					bottom = true;
 			}
-			//obj[i].colided = (top||bottom||right||left)
 		}
+			return (top||bottom||right||left);
 	}
 
 }

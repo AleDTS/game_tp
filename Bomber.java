@@ -27,7 +27,7 @@ public class Bomber extends Interactible {
 	}
 
 	public synchronized void dropBomb(Bomb bomb){
-			bomb.drop(this.posX, this.posY);
+		bomb.drop(this.posX, this.posY);
 	}
 
 	public synchronized void reset(){
