@@ -8,8 +8,8 @@ public class Bomber extends Interactible {
 	public Bomber(){
 		posX = posY = 0;
 		loadImage("bomber.png");
-	     height = img.getHeight(this);
-	     width = img.getHeight(this);
+	    height = img.getHeight(this);
+	    width = img.getHeight(this);
 	}
 
 	public synchronized void moveUp(int bound){
@@ -35,6 +35,12 @@ public class Bomber extends Interactible {
 			isMovingLeft = true;
 			posX -= intensity;
 		}
+	}
+
+	public void hitted(){
+		System.out.println("SHIT!");
+		posX = 0;
+		posY = 0;
 	}
 
 	public boolean oneDirection(){

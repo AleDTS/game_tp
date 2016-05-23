@@ -56,7 +56,7 @@ public class Interactible extends JPanel {
 				top = true;
 		}
 
-		if ((posY+h) == y){
+		if ((posY+height) == y){
 			if  ((x <= posX && posX < (x+w)) ||
 				(x < (posX+width) && (posX+width) <= (x+w)))
 				bottom = true;
@@ -103,4 +103,76 @@ public class Interactible extends JPanel {
 		//}
 		return (top||bottom||right||left);
 	}
+
+		public boolean inside(Interactible obj){
+			boolean up, down, left, right;
+			int x,y,h,w;
+			up = down = left = right = false;
+
+			x = obj.posX;
+			y = obj.posY;
+			h = obj.height;
+			w = obj.width;
+
+			if (posX < (x+w) && posX >= x){
+				if  ((y <= posY && posY < (y+h)) &&
+					(y < (posY+height) && (posY+height) <= (y+h))){
+					
+					left = true;
+				}
+			}
+
+			if ((posX + width) > x && (posX + width) <= (x+w) ){
+				if  ((y <= posY && posY < (y+h)) &&
+					(y < (posY+height) && (posY+height) <= (y+h)))
+					right = true;
+			}
+
+			if (posY < (y+h) && posY >= y){
+				if  ((x <= posX && posX < (x+w)) &&
+					(x < (posX+width) && (posX+width) <= (x+w)))
+					up = true;
+			}
+
+			if ((posY+height) > y && (posY+height) <= (y+h)){
+				if  ((x <= posX && posX < (x+w)) &&
+					(x < (posX+width) && (posX+width) <= (x+w)))
+					down = true;
+			}
+
+			return (up||down||left||right);
+		}
+
+		public boolean inside(int x, int y, int w, int h){
+			boolean up, down, left, right;
+			up = down = left = right = false;
+
+			if (posX < (x+w) && posX >= x){
+				if  ((y <= posY && posY < (y+h)) &&
+					(y < (posY+height) && (posY+height) <= (y+h))){
+					
+					left = true;
+				}
+			}
+
+			if ((posX + width) > x && (posX + width) <= (x+w) ){
+				if  ((y <= posY && posY < (y+h)) &&
+					(y < (posY+height) && (posY+height) <= (y+h)))
+					right = true;
+			}
+
+			if (posY < (y+h) && posY >= y){
+				if  ((x <= posX && posX < (x+w)) &&
+					(x < (posX+width) && (posX+width) <= (x+w)))
+					up = true;
+			}
+
+			if ((posY+height) > y && (posY+height) <= (y+h)){
+				if  ((x <= posX && posX < (x+w)) &&
+					(x < (posX+width) && (posX+width) <= (x+w)))
+					down = true;
+			}
+
+			return (up||down||left||right);
+		}
 }
