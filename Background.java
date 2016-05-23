@@ -26,7 +26,7 @@ public class Background extends JPanel{
 		wall_width = 50;
 	    matrix = new StaticWall[lin][col];
 
-	    System.out.println(lin+" "+col);
+	    //System.out.println(lin+" "+col);
 
 		try {
 		    img = ImageIO.read(new File("background.png"));
@@ -38,10 +38,10 @@ public class Background extends JPanel{
 			for (int j=0; j<col; j++){
 				if (i%2!=0 && j%2!=0){
 					matrix[i][j] = new StaticWall(j*wall_width, i*wall_height);
-					System.out.format( "(%d, %d)", j*wall_width, i*wall_height );
+					//System.out.format( "(%d, %d)", j*wall_width, i*wall_height );
 				}
 			}
-			System.out.format("\n");
+			//System.out.format("\n");
 		}	   
 	}
 

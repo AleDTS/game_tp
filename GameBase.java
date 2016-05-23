@@ -24,6 +24,7 @@ public class GameBase extends Canvas{
 	final int FPS = 60;
 	int width = 850, height = 650;
 	Keys key = null;
+	static int sec;
 
 	Image offscreen = null;
 	Graphics offgraphics = null;
@@ -125,7 +126,11 @@ public class GameBase extends Canvas{
 			repaint();
 			//System.out.println(frame);
 			frame++;
-			if (frame == (FPS+1)) frame = 0;
+			if (frame == (FPS+1)) {
+				frame = 0;
+				sec++;
+				//System.out.println(sec);
+			}
 		}
 	}
 

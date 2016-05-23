@@ -40,7 +40,7 @@ public class Bomber extends Interactible {
 	}
 
 	public synchronized void dropBomb(Bomb bomb){
-		bomb.drop(this.posX, this.posY);
+		bomb.drop((int)((posX+width/2)/width)*width, (int)((posY+height/2)/height)*height);
 	}
 
 	public synchronized void reset(){
