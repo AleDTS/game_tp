@@ -3,11 +3,13 @@ public class Bomber extends Interactible {
 	public static final int MAX_BOMBS = 7;
 	int intensity = 5;
 	boolean isMovingRight, isMovingLeft, isMovingUp, isMovingDown;
+	int bombs;
 
-	public Bomber(){posX = posY = 0;
+	public Bomber(){
+		posX = posY = 0;
 		loadImage("bomber.png");
-      	height = img.getHeight(this);
-     	width = img.getHeight(this);
+	     height = img.getHeight(this);
+	     width = img.getHeight(this);
 	}
 
 	public synchronized void moveUp(int bound){
@@ -39,8 +41,9 @@ public class Bomber extends Interactible {
 		return (isMovingRight^isMovingLeft^isMovingUp^isMovingDown);
 	}
 
-	public synchronized void dropBomb(Bomb bomb){
-		bomb.drop((int)((posX+width/2)/width)*width, (int)((posY+height/2)/height)*height);
+	public Bomb dropBomb(){
+		bombs++;
+		return (new Bomb(posX, posY,this));
 	}
 
 	public synchronized void reset(){
