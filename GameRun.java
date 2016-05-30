@@ -31,8 +31,7 @@ public class GameRun extends GameBase {
 	}
 
 	public void keys(){
-		Bomb b;
-		
+		Bomb b = null;
 		right = key.isPressed(keys[0]);
 		left = key.isPressed(keys[1]);
 		up = key.isPressed(keys[2]);
@@ -55,11 +54,11 @@ public class GameRun extends GameBase {
 		if(space){
 			if (bomber.bombs < Bomber.MAX_BOMBS && bomb.size() < MAX_BOMBS){
 				if (bomb_aux == null || bomb.size() == 0){
-					bomb_aux = bomber.dropBomb();
+					b = bomb_aux = bomber.dropBomb();
 					bomb.add(bomb_aux);
 				}
 				else if (!bomber.inside(bomb_aux))
-					bomb.add(bomber.dropBomb());
+					bomb.add(b = bomber.dropBomb());
 			}
 			//System.out.println(bomb.size());
 			key.button(keys[4]);
@@ -67,39 +66,41 @@ public class GameRun extends GameBase {
 	}
 
 	public void paint(Graphics g){
-		Bomb b = null;
 		keys();
 		
 		bomber.reset();
+		//Tests before painting
 		for(Bomb i : bomb){
-			bomber.inside(i);
-			i.hitBomb(bomber);
-		}
-	    bg.hitWall(bomber);
-
-	   	for(Bomb i : bomb){
-			if (i.counter(mSec)){
-				
-				//if (i.counter(mSec, 10))
-				//	i.explosion(g);
-				i.remove = true;
+			if (i.counter(mSec)){ 		//If bomb explode
+				i.remove = true; 		
+				if (i.explode(bomber)) 	//If bomber hitted
+					bomber.hitted();
+				for(Bomb b : bomb) 		//If another bomb hitted
+					if (i.explode(b))
+						b.remove = true;
+				i.explode()
 			}
+			i.hitBomb(bomber);
+			bg.hitWall(i);
+			//System.out.format
+			//("T %b - B %b - R %b - L %b\n",i.top,i.bottom,i.right,i.left);
 		}
 
+	    bg.hitWall(bomber);
 		bg.draw(g);
+		bg.drawBreakable(g);
 		for(Bomb i : bomb)
 			i.draw(g);
 
 		for(Bomb i : bomb){
-			//System.out.println(i.remove);
 			if (i.remove == true){
-				i.explosion(g);
-				if (i.counter(mSec, 10)){
+				i.drawExplosion(g);
+				if (i.counter(mSec, 10))
 					bomb.remove(i);
-					if (i.explode(bomber))
-						bomber.hitted();
-				}
-			}	
+				if (i.explode(bomber))
+					bomber.hitted();
+
+			}
 		}
 		bomber.draw(g);
 	}

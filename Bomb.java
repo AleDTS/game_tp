@@ -7,7 +7,7 @@ public class Bomb extends Interactible {
 	public static int MAX_TIME = 40;
 	public int ini = -1, ini_expl = -1;
 	public int time;
-	public int range = 2;
+	public int range = 1;
 	public boolean remove = false;
 	Bomber bomber;
 
@@ -41,10 +41,26 @@ public class Bomb extends Interactible {
 		g.drawImage(img, posX, posY, this);
 	}
 
-	public void explosion(Graphics g){
+	public void drawExplosion(Graphics g){
+		/*
+		//VERTICAL
+		if (!(top||bottom))
 		g.fillRect(posX, posY-height*range , width, (height*(1+range*2)));
+		//HORIZONTAL
+		if (!(right||left))
 		g.fillRect(posX-width*range, posY, (width*(1+range*2)), height);
+		*/
 		//System.out.println("hey");
+
+		if (!top)
+			g.fillRect(posX, posY-height*range,(width), (height*(1+range)));
+		if (!bottom)
+			g.fillRect(posX, posY,(width), (height*(1+range)));
+		if (!right)
+			g.fillRect(posX, posY,(width*(1+range)), (height));
+		if (!left)
+			g.fillRect(posX-width*range, posY,(width*(1+range)), (height));
+
 	}
 
 	public boolean explode(Interactible obj){
