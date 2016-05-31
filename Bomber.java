@@ -1,6 +1,6 @@
 
 public class Bomber extends Interactible {
-	public static final int MAX_BOMBS = 7;
+	int max = 3;
 	int intensity = 5;
 	boolean isMovingRight, isMovingLeft, isMovingUp, isMovingDown;
 	boolean hitted = false;

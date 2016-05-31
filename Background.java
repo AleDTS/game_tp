@@ -133,8 +133,12 @@ public class Background extends JPanel{
 		return obj;
 	}	
 
-	void breakWall(){
-		
+	void hitBreakable(Bomb b){
+		int i,j;
+		for (i=0; i<lin; i++)
+			for (j=0; j<col; j++)
+				if (b.explode(breakableWall(i,j)))
+					breakable_wall[i][j] = false;
 	}
 
 	public void draw(Graphics g){

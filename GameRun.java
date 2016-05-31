@@ -52,7 +52,7 @@ public class GameRun extends GameBase {
 			else bomber.isMovingDown = false;
 
 		if(space){
-			if (bomber.bombs < Bomber.MAX_BOMBS && bomb.size() < MAX_BOMBS){
+			if (bomber.bombs < bomber.max && bomb.size() < MAX_BOMBS){
 				if (bomb_aux == null || bomb.size() == 0){
 					b = bomb_aux = bomber.dropBomb();
 					bomb.add(bomb_aux);
@@ -78,7 +78,7 @@ public class GameRun extends GameBase {
 				for(Bomb b : bomb) 		//If another bomb hitted
 					if (i.explode(b))
 						b.remove = true;
-				i.explode()
+				bg.hitBreakable(i);
 			}
 			i.hitBomb(bomber);
 			bg.hitWall(i);
