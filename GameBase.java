@@ -21,11 +21,12 @@ class Start extends JFrame {
 }
 
 public class GameBase extends Canvas{
-	final int FPS = 60;
-	int width = 850, height = 650;
+	//DEFINE SIZE AND FPS
+	public static int FPS = 60;
+	public static int width = 850;
+	public static int height = 650;
+	
 	Keys key = null;
-	static int sec;
-
 	Image offscreen = null;
 	Graphics offgraphics = null;
 
@@ -69,34 +70,25 @@ public class GameBase extends Canvas{
 	    	i = key.entrySet().iterator();
         	while(i.hasNext()){
             	entry = i.next();
-            	if(entry.getKey() == e.getKeyCode()){
+            	if(entry.getKey() == e.getKeyCode())
 		        	entry.setValue(true);
-            		//key.put(e.getKeyCode(), true);
-            	}
 	        }
-
 		}
 
 		public void keyReleased(KeyEvent e){	 
 			i = key.entrySet().iterator();
         	while(i.hasNext()){
             	entry = i.next();
-            	if(entry.getKey() == e.getKeyCode()){
+            	if(entry.getKey() == e.getKeyCode())
 		        	entry.setValue(false);
-            		//key.put(e.getKeyCode(), false);
-            	}
 	        }
 		}
 
 		public Boolean isPressed(int code){
-			for (Map.Entry<Integer, Boolean> k : key.entrySet()){
-	    		if (k.getKey() == code){
-        				//System.out.println(k.getKey() + " " + k.getValue());
-        			if (k.getValue() == true){
+			for (Map.Entry<Integer, Boolean> k : key.entrySet())
+	    		if (k.getKey() == code)
+        			if (k.getValue() == true)
 		    			return k.getValue();
-        			}
-	    		}
-			}
 	    	return false;
 		}
 
@@ -104,13 +96,10 @@ public class GameBase extends Canvas{
 			i = key.entrySet().iterator();
         	while(i.hasNext()){
             	entry = i.next();
-            	if(entry.getKey() == code){
+            	if(entry.getKey() == code)
 		        	entry.setValue(false);
-            		//key.put(e.getKeyCode(), true);
-            	}
 	        }
 		}
-
 	}
 	
 	class Frame implements ActionListener {
@@ -124,17 +113,9 @@ public class GameBase extends Canvas{
 		
 		public void actionPerformed(ActionEvent e){
 			repaint();
-			//System.out.println(frame);
 			frame++;
-			if (frame == (FPS+1)) {
+			if (frame == (FPS+1))
 				frame = 0;
-				sec++;
-				//System.out.println(sec);
-			}
 		}
-	}
-
-	public static void main(String[] args) {
-		new GameBase();
 	}
 }

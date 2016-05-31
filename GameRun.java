@@ -6,13 +6,11 @@ import javax.swing.Timer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameRun extends GameBase {
-	public static int MAX_BOMBS = 5;
 	public static int TIME_BOMBS = 50;
 	public static int TOP_BOUND = 0;
 	public static int BOTTOM_BOUND = 650;
 	public static int LEFT_BOUND = 0;
 	public static int RIGHT_BOUND = 850;
-	boolean up, down, right, left, space;
 	public int mSec;
 	
 	KeyEvent k;
@@ -31,7 +29,8 @@ public class GameRun extends GameBase {
 	}
 
 	public void keys(){
-		Bomb b = null;
+		boolean up, down, right, left, space;
+		
 		right = key.isPressed(keys[0]);
 		left = key.isPressed(keys[1]);
 		up = key.isPressed(keys[2]);
@@ -52,15 +51,14 @@ public class GameRun extends GameBase {
 			else bomber.isMovingDown = false;
 
 		if(space){
-			if (bomber.bombs < bomber.max && bomb.size() < MAX_BOMBS){
+			if (bomber.bombs < bomber.max){
 				if (bomb_aux == null || bomb.size() == 0){
-					b = bomb_aux = bomber.dropBomb();
+					bomb_aux = bomber.dropBomb();
 					bomb.add(bomb_aux);
 				}
 				else if (!bomber.inside(bomb_aux))
-					bomb.add(b = bomber.dropBomb());
+					bomb.add(bomber.dropBomb());
 			}
-			//System.out.println(bomb.size());
 			key.button(keys[4]);
 		}
 	}
@@ -69,48 +67,44 @@ public class GameRun extends GameBase {
 		keys();
 		
 		bomber.reset();
+	    bg.hitWall(bomber);				//If bomber hits static wall
+
 		//Tests before painting
 		for(Bomb i : bomb){
-			if (i.counter(mSec)){ 		//If bomb explode
+			if (i.counter(mSec)){ 		//If bomb counter ends
 				i.remove = true; 		
 				if (i.explode(bomber)) 	//If bomber hitted
 					bomber.hitted();
 				for(Bomb b : bomb) 		//If another bomb hitted
 					if (i.explode(b))
 						b.remove = true;
-				bg.hitBreakable(i);
+				bg.hitBreakable(i);		//If explosion hits breakable wall
 			}
-			i.hitBomb(bomber);
-			bg.hitWall(i);
-			//System.out.format
-			//("T %b - B %b - R %b - L %b\n",i.top,i.bottom,i.right,i.left);
+			i.hitBomb(bomber);			//If bomber colides bomb
+			bg.hitWall(i);				//If bomb colides static wall
 		}
 
-	    bg.hitWall(bomber);
+		//Painting
 		bg.draw(g);
 		bg.drawBreakable(g);
 		for(Bomb i : bomb)
 			i.draw(g);
 
-		for(Bomb i : bomb){
+		
+		for(Bomb i : bomb){					//Explosion
 			if (i.remove == true){
 				i.drawExplosion(g);
-				if (i.counter(mSec, 10))
+				if (i.counter(mSec, 10))	//Explosion time!
 					bomb.remove(i);
 				if (i.explode(bomber))
 					bomber.hitted();
-
 			}
 		}
 		bomber.draw(g);
 	}
 
-	public static void main(String[] args) {
-		GameBase run = new GameRun();
-		new Start(run, "Teste");
-	}
-
-	class Counter implements ActionListener {
+	//This counter controls game time
+	class Counter implements ActionListener { 	
 		
 		public Counter(){
 			Timer t = new Timer(100, this);
@@ -121,7 +115,11 @@ public class GameRun extends GameBase {
 		
 		public void actionPerformed(ActionEvent e){
 			mSec++;
-			//System.out.println(mSec);
 		}
+	}
+
+	public static void main(String[] args) {
+		GameBase run = new GameRun();
+		new Start(run, "Teste");
 	}
 }
