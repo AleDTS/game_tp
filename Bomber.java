@@ -1,16 +1,28 @@
 
 public class Bomber extends Interactible {
+	int player, lin, col;
 	int max = 3;
-	int intensity = 5;
+	static int intensity = 5;
 	boolean isMovingRight, isMovingLeft, isMovingUp, isMovingDown;
 	boolean hitted = false;
 	int bombs;
 
-	public Bomber(){
-		posX = posY = 0;
-		loadImage("bomber.png");
+	public Bomber(int player, int lin, int col){
+		this.player = player;
+		this.lin = lin;
+		this.col = col;
+		//System.out.println(lin+" "+col);
+		switch (player){
+			case 1: posX = posY = 0; break;
+			case 2: posY = 0; 			posX = (col-1)*50; break;
+			case 3: posY = (lin-1)*50; 	posX = 0; break;
+			case 4: posY = (lin-1)*50; 	posX = (col-1)*50; break;
+		}
+		
+		loadImage("bomber"+player+".png");
 	    height = img.getHeight(this);
 	    width = img.getHeight(this);
+	    //System.out.println(player +" "+ posX +" "+ posY);
 	}
 
 	public synchronized void moveUp(int bound){
@@ -39,9 +51,14 @@ public class Bomber extends Interactible {
 	}
 
 	public void hitted(){
-		System.out.println("SHIT!");
-		posX = 0;
-		posY = 0;
+		System.out.println("Player "+player+" dead!");
+
+		switch (player){
+			case 1: posX = posY = 0; break;
+			case 2: posY = 0; 			posX = (col-1)*50; break;
+			case 3: posY = (lin-1)*50; 	posX = 0; break;
+			case 4: posY = (lin-1)*50; 	posX = (col-1)*50; break;
+		}
 	}
 
 	public boolean oneDirection(){

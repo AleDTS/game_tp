@@ -23,16 +23,30 @@ class Start extends JFrame {
 public class GameBase extends Canvas{
 	//DEFINE SIZE AND FPS
 	public static int FPS = 60;
-	public static int width = 850;
-	public static int height = 650;
-	
+	public static int width;
+	public static int height;
+
 	Keys key = null;
 	Image offscreen = null;
 	Graphics offgraphics = null;
 
 	public GameBase(){
-		setPreferredSize(new Dimension(width,height));
+		
 		new Frame(FPS);
+	}
+
+	public void setSize(int w, int h){
+		setPreferredSize(new Dimension(w,h));
+		width = w;
+		height = h;
+	}
+
+	public int height(){
+		return getHeight();
+	}
+
+	public int width(){
+		return getWidth();
 	}
 
 	public void paint(Graphics g) {}

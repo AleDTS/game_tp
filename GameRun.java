@@ -7,28 +7,41 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameRun extends GameBase {
 	public static int TIME_BOMBS = 50;
-	public static int TOP_BOUND = 0;
-	public static int BOTTOM_BOUND = 650;
-	public static int LEFT_BOUND = 0;
-	public static int RIGHT_BOUND = 850;
+	public static int TOP_BOUND;
+	public static int BOTTOM_BOUND;
+	public static int LEFT_BOUND;
+	public static int RIGHT_BOUND;
+	public static int PLAYERS = 4;
+	public int PLAYER;
 	public int mSec;
 	
 	KeyEvent k;
 	int[] keys = {k.VK_RIGHT, k.VK_LEFT, k.VK_UP, k.VK_DOWN, k.VK_SPACE};
 	Keys key = new Keys(keys);
-	Queue<Bomb> bomb = new ConcurrentLinkedQueue<Bomb>();
-	Bomb bomb_aux = null;
-
-	Bomber bomber = new Bomber();
+	Queue<Bomb> bombs = new ConcurrentLinkedQueue<Bomb>();
+	Map<Integer, Bomber> bombers = new HashMap<Integer, Bomber>();
 	Background bg;
-	
+		
 	public void init(){
-		bg = new Background(BOTTOM_BOUND/50, RIGHT_BOUND/50);
+		setSize(850,650);
+		TOP_BOUND = 0;
+		BOTTOM_BOUND = height;
+		LEFT_BOUND = 0;
+		RIGHT_BOUND = width;
+		PLAYER = 1;
+		int lin = BOTTOM_BOUND/50;
+		int col = RIGHT_BOUND/50;
+		System.out.println(lin+" "+col);
+		for (int i = 1; i <= PLAYERS; i++)
+			bombers.put(i,new Bomber(i, lin, col));
+		bg = new Background(PLAYERS, lin, col);
 		addKeys(key);
 		new Counter();
+		System.out.println(PLAYER);
 	}
 
-	public void keys(){
+	public void keys(Bomber bomber){
+		Bomb bomb_aux = null;
 		boolean up, down, right, left, space;
 		
 		right = key.isPressed(keys[0]);
@@ -52,55 +65,73 @@ public class GameRun extends GameBase {
 
 		if(space){
 			if (bomber.bombs < bomber.max){
-				if (bomb_aux == null || bomb.size() == 0){
+				if (bomb_aux == null || bombs.size() == 0){
 					bomb_aux = bomber.dropBomb();
-					bomb.add(bomb_aux);
+					bombs.add(bomb_aux);
 				}
 				else if (!bomber.inside(bomb_aux))
-					bomb.add(bomber.dropBomb());
+					bombs.add(bomber.dropBomb());
 			}
 			key.button(keys[4]);
 		}
+
+		bomber.reset();
 	}
 
 	public void paint(Graphics g){
-		keys();
+		Bomber bomber;
+		keys(bombers.get(PLAYER));
 		
-		bomber.reset();
-	    bg.hitWall(bomber);				//If bomber hits static wall
+		for (Map.Entry<Integer, Bomber> b : bombers.entrySet()){
+			bomber = b.getValue();
+	    	bg.hitWall(bomber);				//If bomber hits static wall
+		}
 
 		//Tests before painting
-		for(Bomb i : bomb){
+		for(Bomb i : bombs){
 			if (i.counter(mSec)){ 		//If bomb counter ends
-				i.remove = true; 		
-				if (i.explode(bomber)) 	//If bomber hitted
-					bomber.hitted();
-				for(Bomb b : bomb) 		//If another bomb hitted
+				i.remove = true; 
+				for (Map.Entry<Integer, Bomber> b : bombers.entrySet()){
+					bomber = b.getValue();
+					if (i.explode(bomber)) 	//If bomber hitted
+						bomber.hitted();
+				}
+				for(Bomb b : bombs) 		//If another bomb hitted
 					if (i.explode(b))
 						b.remove = true;
 				bg.hitBreakable(i);		//If explosion hits breakable wall
 			}
-			i.hitBomb(bomber);			//If bomber colides bomb
+			for (Map.Entry<Integer, Bomber> b : bombers.entrySet()){
+				bomber = b.getValue();
+				i.hitBomb(bomber);		//If bomber colides bomb
+			}
 			bg.hitWall(i);				//If bomb colides static wall
 		}
 
 		//Painting
 		bg.draw(g);
 		bg.drawBreakable(g);
-		for(Bomb i : bomb)
+		for(Bomb i : bombs)
 			i.draw(g);
 
 		
-		for(Bomb i : bomb){					//Explosion
+		for(Bomb i : bombs){					//Explosion
 			if (i.remove == true){
 				i.drawExplosion(g);
 				if (i.counter(mSec, 10))	//Explosion time!
-					bomb.remove(i);
-				if (i.explode(bomber))
-					bomber.hitted();
+					bombs.remove(i);
+				for (Map.Entry<Integer, Bomber> b : bombers.entrySet()){
+					bomber = b.getValue();
+					if (i.explode(bomber))
+						bomber.hitted();
+				}
 			}
 		}
-		bomber.draw(g);
+
+		for (Map.Entry<Integer, Bomber> b : bombers.entrySet()){
+			bomber = b.getValue();
+			bomber.draw(g);
+		}
 	}
 
 	//This counter controls game time
