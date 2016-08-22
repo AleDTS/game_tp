@@ -20,6 +20,10 @@ public class Background extends JPanel{
 		}
 	}
 
+	public void copyBreakable(boolean [][] b_wall){
+		
+	}
+
 	public void breakableWall(int lin, int col, double prob){
 		boolean notHere = false;
 		int i = 0, j = 0;

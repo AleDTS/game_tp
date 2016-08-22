@@ -99,7 +99,7 @@ public class Interactible extends JPanel {
 					(x < (posX+width) && (posX+width) <= (x+w)))
 					bottom = true;
 			}
-			System.out.format("%b %b %b %b\n", top, bottom, right, left);
+			//System.out.format("%b %b %b %b\n", top, bottom, right, left);
 		//}
 		return (top||bottom||right||left);
 	}

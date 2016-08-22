@@ -7,31 +7,28 @@ import java.awt.image.*;
 import java.util.*;
 import javax.swing.Timer;
 
-class Start extends JFrame {
+// class Start extends JFrame {
 
-	public Start(GameBase base, String name){
-		super(name);
-		add(base);
-		base.init();
-		pack();
-		setVisible(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		addKeyListener(base.key);
-	}
-}
+// 	public Start(GameBase base, String name){
+// 		super(name);
+// 		add(base);
+// 		base.init();
+// 		pack();
+// 		setVisible(true);
+// 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+// 	}
+// }
 
 public class GameBase extends Canvas{
-	//DEFINE SIZE AND FPS
+	//DEFAULT
 	public static int FPS = 60;
 	public static int width;
 	public static int height;
 
-	Keys key = null;
 	Image offscreen = null;
 	Graphics offgraphics = null;
 
 	public GameBase(){
-		
 		new Frame(FPS);
 	}
 
@@ -50,11 +47,6 @@ public class GameBase extends Canvas{
 	}
 
 	public void paint(Graphics g) {}
-	public void init() {}
-
-	public void addKeys(Keys key){
-		this.key = key;
-	}
 
 	public void update(Graphics g) {
 		if (height != getHeight() || width != getWidth() || offscreen == null) {
@@ -80,13 +72,14 @@ public class GameBase extends Canvas{
 				key.put(code[i], false);
 		}
 
-	    public void  keyPressed(KeyEvent e){
+	    public void keyPressed(KeyEvent e){
 	    	i = key.entrySet().iterator();
         	while(i.hasNext()){
             	entry = i.next();
             	if(entry.getKey() == e.getKeyCode())
 		        	entry.setValue(true);
 	        }
+	        msg();
 		}
 
 		public void keyReleased(KeyEvent e){	 
@@ -96,6 +89,7 @@ public class GameBase extends Canvas{
             	if(entry.getKey() == e.getKeyCode())
 		        	entry.setValue(false);
 	        }
+	        msg();
 		}
 
 		public Boolean isPressed(int code){
@@ -106,15 +100,19 @@ public class GameBase extends Canvas{
 	    	return false;
 		}
 
-		public void button(int code){
-			i = key.entrySet().iterator();
-        	while(i.hasNext()){
-            	entry = i.next();
-            	if(entry.getKey() == code)
-		        	entry.setValue(false);
-	        }
+		public Boolean button(int code){
+			for (Map.Entry<Integer, Boolean> k : key.entrySet())
+	    		if (k.getKey() == code)
+        			if (k.getValue() == true){
+        				boolean b = true;
+        				k.setValue(false);
+		    			return true;
+        			}
+	    	return false;
 		}
 	}
+
+	public void msg(){}
 	
 	class Frame implements ActionListener {
 		public int frame;
@@ -132,4 +130,5 @@ public class GameBase extends Canvas{
 				frame = 0;
 		}
 	}
+
 }
