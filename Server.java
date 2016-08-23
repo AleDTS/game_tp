@@ -3,13 +3,20 @@ import java.io.*;
 import java.util.*;
 
 public class Server {
+    public static int players = 0;
+    public static boolean start;
+    public boolean [][] bWall;
+
     public Server (int port) throws IOException {
         ServerSocket server = new ServerSocket (port);
+        
+        boolean start = false;
 
-        while (true) {
+        while(true){
             Socket client = server.accept ();
             System.out.println ("Accepted from " + client.getInetAddress ());
             Handler c = new Handler (client);
+            ++players;
             c.start ();
         }
     }
@@ -26,13 +33,15 @@ class Handler extends Thread {
     protected ObjectInputStream i;
     protected ObjectOutputStream o;
 
-    int players;
-    boolean[][] breakable_wall;
+    String com;
+    boolean start = false, ready = false;
+    public static boolean[][] bWall = null;
     
     public Handler (Socket s) throws IOException {
         this.s = s;
-        i = new ObjectInputStream (new BufferedInputStream (s.getInputStream ()));
-        o = new ObjectOutputStream (new BufferedOutputStream (s.getOutputStream ()));
+        o = new ObjectOutputStream (s.getOutputStream ());
+        o.flush();
+        i = new ObjectInputStream (s.getInputStream ());
     }
 
     protected static Vector handlers = new Vector ();
@@ -41,18 +50,40 @@ class Handler extends Thread {
         String msg = null;
         try {
             handlers.addElement (this);
-            while (readMsg(msg = i.readUTF ())) 
+
+            do{
+                o.writeInt(Server.players);
+                o.flush();
+                com = i.readUTF();
+                if (com.equalsIgnoreCase("READY"))
+                    ready = true;
+                start = allReady();
+                o.writeBoolean(start);
+                o.flush();
+            }while(!start);
+
+            if (bWall == null)
+                bWall = (boolean[][])i.readObject();
+            else{
+                o.writeObject(bWall);
+                o.flush();
+            }
+            
+            while (readMsg(msg = i.readUTF ())) {
                 broadcast (msg);
+            }
         } catch (IOException ex) {
             ex.printStackTrace ();
-        } finally {
+        } catch (ClassNotFoundException e) {}   
+        finally {
             handlers.removeElement (this);
+            Server.players--;
             try {
                 s.close ();
             } catch (IOException ex) {
             ex.printStackTrace();
         }
-        }   
+        } 
     }
 
     public boolean readMsg(String msg){
@@ -60,6 +91,19 @@ class Handler extends Thread {
             return false;
         else
             return true;
+    }
+
+    protected static boolean allReady(){
+        synchronized (handlers) {
+            Enumeration e = handlers.elements ();
+
+            while (e.hasMoreElements ()) {
+                Handler c = (Handler) e.nextElement ();
+                if (!c.ready)
+                    return false;
+            }
+            return true;
+        }
     }
 
     protected static void broadcast (String message) {
@@ -80,97 +124,24 @@ class Handler extends Thread {
             }
         }
     }
+
+    protected static void broadcastObj (Object obj) {
+    
+        synchronized (handlers) {
+            Enumeration e = handlers.elements ();
+            
+            while (e.hasMoreElements ()) {
+                Handler c = (Handler) e.nextElement ();
+                try {
+                    synchronized (c.o) {
+                        c.o.writeObject (obj);
+                    }
+                    c.o.flush ();
+                } catch (IOException ex) {
+                    c.stop ();
+                }
+            }
+        }
+    }
+
 }
-
-// import java.net.*;
-// import java.io.*;
-// import java.util.*;
-
-// class Server {
-//     public static void main(String[] args) {
-//         ServerSocket serverSocket=null;
-//         int porta = 5974;
-
-//         try {
-//             serverSocket = new ServerSocket(porta);
-//         } catch (IOException e) {
-//             System.out.println("Could not listen on port: " + porta + ", " + e);
-//             System.exit(1);
-//         }
-
-//         for (int i=0; i<4; i++) {
-//             Socket playerSocket = null;
-//             try {
-//                 playerSocket = serverSocket.accept();
-//             } catch (IOException e) {
-//                 System.out.println("Accept failed: " + porta + ", " + e);
-//                 System.exit(1);
-//             }
-
-//             System.out.println("Accept Funcionou!");
-
-//             new Serving(playerSocket).start();
-//         }
-
-//         try {
-//             serverSocket.close();
-//         } catch (IOException e) {
-//             e.printStackTrace();
-//         }
-//     }
-// }
-
-
-// class Serving extends Thread {
-//     Socket playerSocket;
-//     static ObjectOutputStreamos[] = new DataOutputStream[4];
-//     static int players=0;
-//     boolean[] buttons = new boolean[5];
-//     boolean b = true;
-
-//     Serving(Socket playerSocket) {
-//         this.playerSocket = playerSocket;
-//     }
-
-//     public void run() {
-//         try {
-//             ObjectInputStream is = new ObjectInputStream(playerSocket.getInputStream());
-//             os[players++] = new DataOutputStream(playerSocket.getOutputStream());
-
-//             int posX, posY;
-
-//             do {
-//                 //for(int k=0; k<players; k++)
-//                 //posX = is.readInt();
-//                 //posY = is.readInt();
-//                 for(int k=0; k<players; k++) 
-//                     for(int i=0; i<buttons.length; i++)
-//                         buttons[i] = is.readBoolean();
-
-//                 for(int k=0; k<players; k++) {
-                    
-//                 System.out.printf("P%d : ", (k+1));
-//                     for(int i=0; i<buttons.length; i++){
-//                         os[k].writeBoolean(buttons[i]);
-//                         System.out.printf("%b ",buttons[i]);
-//                     }
-//                 System.out.printf("\n");
-//                     //os[i].writeInt(posX);
-//                     //os[i].writeInt(posY);
-//                     os[k].flush();
-//                 }
-//             } while (b);
-
-
-//             for (int i=0; i<players; i++)
-//                 os[i].close();
-//             is.close();
-//             playerSocket.close();
-
-//         } catch (IOException e) {
-//             e.printStackTrace();
-//         } catch (NoSuchElementException e) {
-//             System.out.println("Conexacao terminada pelo cliente");
-//         }  
-//     }
-// };

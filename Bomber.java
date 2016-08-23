@@ -7,10 +7,10 @@ public class Bomber extends Interactible {
 	boolean hitted = false;
 	int bombs;
 
-	public Bomber(int player, int lin, int col){
+	public Bomber(int player, int width, int height){
 		this.player = player;
-		this.lin = lin;
-		this.col = col;
+		lin = height/50;
+		col = width/50;
 		//System.out.println(lin+" "+col);
 		switch (player){
 			case 1: posX = posY = 0; break;

@@ -1,7 +1,6 @@
 import java.awt.*;
 import javax.imageio.*;
 import java.io.*;
-import java.awt.image.*;
 import javax.swing.*;
 
 public class Interactible extends JPanel {

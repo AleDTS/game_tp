@@ -14,7 +14,6 @@ public class GameRun extends GameBase {
 	public static int LEFT_BOUND;
 	public static int RIGHT_BOUND;
 	public static int PLAYERS;
-	public boolean OK;
 	public int PLAYER;
 	public int mSec;
 	public String msg;
@@ -28,22 +27,19 @@ public class GameRun extends GameBase {
 	Map<Integer, Bomber> bombers = new HashMap<Integer, Bomber>();
 	Background bg;
 
-	public GameRun(int player, int players){
+	public GameRun(int player, int players, Background bg, int width, int height){
 		this.PLAYER = player;
 		this.PLAYERS = players;
-		setSize(850,650);
+		this.width = width;
+		this.height = height;
+		setSize(width, height);
 		TOP_BOUND = 0;
 		BOTTOM_BOUND = height;
 		LEFT_BOUND = 0;
 		RIGHT_BOUND = width;
-		//PLAYER = 1;
-		int lin = BOTTOM_BOUND/50;
-		int col = RIGHT_BOUND/50;
+		this.bg = bg;
 		for (int i = 1; i <= PLAYERS; i++)
-			bombers.put(i,new Bomber(i, lin, col));
-		
-		bg = new Background(PLAYERS, lin, col);
-		//addKeys(key);
+			bombers.put(i,new Bomber(i, width, height));
 		new Counter();
 	}
 
@@ -98,7 +94,6 @@ public class GameRun extends GameBase {
 	}
 
 	public void receive(String msg){
-		//System.out.println(msg);
 		int i = Character.getNumericValue(msg.charAt(0));
 		msg_others[i-1] = msg;
 	}

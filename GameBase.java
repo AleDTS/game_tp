@@ -7,19 +7,7 @@ import java.awt.image.*;
 import java.util.*;
 import javax.swing.Timer;
 
-// class Start extends JFrame {
-
-// 	public Start(GameBase base, String name){
-// 		super(name);
-// 		add(base);
-// 		base.init();
-// 		pack();
-// 		setVisible(true);
-// 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-// 	}
-// }
-
-public class GameBase extends Canvas{
+public class GameBase extends Canvas {
 	//DEFAULT
 	public static int FPS = 60;
 	public static int width;

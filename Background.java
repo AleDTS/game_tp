@@ -1,66 +1,57 @@
 import java.awt.*;
 import javax.imageio.*;
 import java.io.*;
-import java.awt.image.*;
+//import java.awt.image.*;
 import javax.swing.*;
 
-public class Background extends JPanel{
+public class Background extends JPanel {
 	Image img, breakable;
-	static int lin, col, players;
+	static int lin, col, players, width, height;
 	int wall_width, wall_height;
 	Wall[][] static_matrix, breakable_matrix;
-	boolean[][] breakable_wall;
+	static boolean[][] breakable_wall = null;
 
 	public class Wall {
 		int posX, posY;
-
 		public Wall(int x, int y){
 			posX = x;
 			posY = y;
 		}
 	}
 
-	public void copyBreakable(boolean [][] b_wall){
-		
-	}
-
 	public void breakableWall(int lin, int col, double prob){
 		boolean notHere = false;
 		int i = 0, j = 0;
 
-		this.lin = lin;
-		this.col = col;
 		for (i = 0; i<lin; i++){
 			for (j = 0; j<col; j++){
 				if (static_matrix[i][j] == null){
 					if (
-		(players >= 1 && (i>=0 && i<3 && j==0) || (j>=0 && j < 3 && i == 0) ) ||
-		(players >= 2 && (i>=0 && i<3 && j==(col-1)) || (j>=(col-3) && j < col && i == 0)) ||
-		(players >= 3 && (i>=(lin-3) && i < lin && j == 0) || (j>=0 && j < 3 && i == (lin-1))) ||
-		(players >= 2 && (i>=(lin-3) && i < lin && j == (col-1)) || (j>=(col-3) && j < col && i == (lin-1)))
+(players >= 1 && (i>=0 && i<3 && j==0) || (j>=0 && j < 3 && i == 0) ) ||
+(players >= 2 && (i>=0 && i<3 && j==(col-1)) || (j>=(col-3) && j < col && i == 0)) ||
+(players >= 3 && (i>=(lin-3) && i < lin && j == 0) || (j>=0 && j < 3 && i == (lin-1))) ||
+(players >= 2 && (i>=(lin-3) && i < lin && j == (col-1)) || (j>=(col-3) && j < col && i == (lin-1)))
 					)	notHere = true;
 					else
 						notHere = false;
 					
 					if (Math.random() <= prob && !notHere)
-						//System.out.format(" 1");
 						breakable_wall[i][j] = true;
 					else
 						breakable_wall[i][j] = false;
-						//System.out.format(" 0");
 				}
-					//System.out.format(" 0"); 
 			}
-			//System.out.format("\n");
 		}
 	}
 
-	public Background(int players, int lin, int col){
+	public Background(int players, int width, int height, boolean[][] bWall){
 		this.players = players;
-		this.lin = lin;
-		this.col = col;
+		this.width = width;
+		this.height = height;
 		wall_height = 50;
 		wall_width = 50;
+		lin = height/wall_height;
+		col = width/wall_width;
 	    static_matrix = new Wall[lin][col];
 	    breakable_matrix = new Wall[lin][col];
 	    breakable_wall = new boolean[lin][col];
@@ -86,7 +77,9 @@ public class Background extends JPanel{
 			//System.out.format("\n");
 		}
 
-		breakableWall(lin,col,0.8);
+		if (bWall == null)
+			breakableWall(lin,col,0.8);
+		else breakable_wall = bWall;
 
 		for (int i=0; i<lin; i++){
 			for (int j=0; j<col; j++){
