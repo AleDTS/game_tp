@@ -50,6 +50,14 @@ public class Bomber extends Interactible {
 		}
 	}
 
+	public void setPosX(int x){
+		posX = x;
+	}
+
+	public void setPosY(int y){
+		posY = y;
+	}
+
 	public void hitted(){
 		System.out.println("Player "+player+" dead!");
 

@@ -19,13 +19,16 @@ public class Background extends JPanel {
 		}
 	}
 
-	public void breakableWall(int lin, int col, double prob){
+	public boolean[][] breakableWall(int players, int lin, int col, double prob){
 		boolean notHere = false;
 		int i = 0, j = 0;
+		boolean[][] bWall = new boolean[lin][col];
 
 		for (i = 0; i<lin; i++){
 			for (j = 0; j<col; j++){
-				if (static_matrix[i][j] == null){
+				if (i%2!=0 && j%2!=0)
+					continue;
+				else {
 					if (
 (players >= 1 && (i>=0 && i<3 && j==0) || (j>=0 && j < 3 && i == 0) ) ||
 (players >= 2 && (i>=0 && i<3 && j==(col-1)) || (j>=(col-3) && j < col && i == 0)) ||
@@ -36,12 +39,14 @@ public class Background extends JPanel {
 						notHere = false;
 					
 					if (Math.random() <= prob && !notHere)
-						breakable_wall[i][j] = true;
+						bWall[i][j] = true;
 					else
-						breakable_wall[i][j] = false;
+						bWall[i][j] = false;
 				}
 			}
 		}
+
+		return bWall;
 	}
 
 	public Background(int players, int width, int height, boolean[][] bWall){
@@ -54,7 +59,7 @@ public class Background extends JPanel {
 		col = width/wall_width;
 	    static_matrix = new Wall[lin][col];
 	    breakable_matrix = new Wall[lin][col];
-	    breakable_wall = new boolean[lin][col];
+	    breakable_wall = bWall;
 
 	    //System.out.println(lin+" "+col);
 
@@ -69,17 +74,20 @@ public class Background extends JPanel {
 			for (int j=0; j<col; j++){
 				if (i%2!=0 && j%2!=0){
 					static_matrix[i][j] = new Wall(j*wall_width, i*wall_height);
-					//System.out.format( "(%d, %d)", j*wall_width, i*wall_height );
+					// System.out.format( "(%d, %d)", j*wall_width, i*wall_height );
 				}
 				else 
 					static_matrix[i][j] = null;
 			}
-			//System.out.format("\n");
+			// System.out.format("\n");
 		}
 
-		if (bWall == null)
-			breakableWall(lin,col,0.8);
-		else breakable_wall = bWall;
+		// if (b){
+		// 	System.out.println("hey");
+		// 	breakableWall(lin,col,0.8);
+		// }
+		// else breakable_wall = bWall;
+		// breakableWall(lin,col,0.8);
 
 		for (int i=0; i<lin; i++){
 			for (int j=0; j<col; j++){

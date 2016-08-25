@@ -67,7 +67,7 @@ public class GameBase extends Canvas {
             	if(entry.getKey() == e.getKeyCode())
 		        	entry.setValue(true);
 	        }
-	        msg();
+	        //msg();
 		}
 
 		public void keyReleased(KeyEvent e){	 
@@ -77,7 +77,7 @@ public class GameBase extends Canvas {
             	if(entry.getKey() == e.getKeyCode())
 		        	entry.setValue(false);
 	        }
-	        msg();
+	        //msg();
 		}
 
 		public Boolean isPressed(int code){
@@ -98,9 +98,20 @@ public class GameBase extends Canvas {
         			}
 	    	return false;
 		}
+
+		public void add(){
+			addListener(this);
+			
+		}
 	}
 
-	public void msg(){}
+	public void addListener(Keys key){
+	        // System.out.println("hey");
+		addKeyListener(key);
+		setFocusable(true);
+	}
+
+	//public void msg(){}
 	
 	class Frame implements ActionListener {
 		public int frame;
@@ -116,7 +127,24 @@ public class GameBase extends Canvas {
 			frame++;
 			if (frame == (FPS+1))
 				frame = 0;
+			//System.out.println(frame);
 		}
 	}
 
+}
+
+class Start extends JFrame {
+	GameBase canvas;
+
+	public Start(GameBase c, int width, int height) {
+		super("Player");
+		canvas = c;
+		add(canvas);
+		canvas.setSize(width, height);
+		pack();
+		setVisible(true);
+		setResizable(false);
+      	setFocusable(true);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+	}
 }
