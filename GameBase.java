@@ -26,15 +26,9 @@ public class GameBase extends Canvas {
 		height = h;
 	}
 
-	public int height(){
-		return getHeight();
-	}
-
-	public int width(){
-		return getWidth();
-	}
-
 	public void paint(Graphics g) {}
+
+	public void close() {}
 
 	public void update(Graphics g) {
 		if (height != getHeight() || width != getWidth() || offscreen == null) {
@@ -67,7 +61,6 @@ public class GameBase extends Canvas {
             	if(entry.getKey() == e.getKeyCode())
 		        	entry.setValue(true);
 	        }
-	        //msg();
 		}
 
 		public void keyReleased(KeyEvent e){	 
@@ -77,7 +70,6 @@ public class GameBase extends Canvas {
             	if(entry.getKey() == e.getKeyCode())
 		        	entry.setValue(false);
 	        }
-	        //msg();
 		}
 
 		public Boolean isPressed(int code){
@@ -100,18 +92,9 @@ public class GameBase extends Canvas {
 		}
 
 		public void add(){
-			addListener(this);
-			
+			addKeyListener(this);
 		}
 	}
-
-	public void addListener(Keys key){
-	        // System.out.println("hey");
-		addKeyListener(key);
-		setFocusable(true);
-	}
-
-	//public void msg(){}
 	
 	class Frame implements ActionListener {
 		public int frame;
@@ -136,8 +119,8 @@ public class GameBase extends Canvas {
 class Start extends JFrame {
 	GameBase canvas;
 
-	public Start(GameBase c, int width, int height) {
-		super("Player");
+	public Start(GameBase c,int player, int width, int height) {
+		super("Player "+player);
 		canvas = c;
 		add(canvas);
 		canvas.setSize(width, height);
@@ -146,5 +129,11 @@ class Start extends JFrame {
 		setResizable(false);
       	setFocusable(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		addWindowListener( new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                canvas.close();
+                System.exit(0);
+            }
+        } );
 	}
 }

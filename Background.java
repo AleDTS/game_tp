@@ -1,7 +1,6 @@
 import java.awt.*;
 import javax.imageio.*;
 import java.io.*;
-//import java.awt.image.*;
 import javax.swing.*;
 
 public class Background extends JPanel {
@@ -81,13 +80,6 @@ public class Background extends JPanel {
 			}
 			// System.out.format("\n");
 		}
-
-		// if (b){
-		// 	System.out.println("hey");
-		// 	breakableWall(lin,col,0.8);
-		// }
-		// else breakable_wall = bWall;
-		// breakableWall(lin,col,0.8);
 
 		for (int i=0; i<lin; i++){
 			for (int j=0; j<col; j++){

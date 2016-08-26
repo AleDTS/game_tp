@@ -70,6 +70,7 @@ class Handler extends Thread {
             col = i.readInt();
 
             if(!(Server.ok)){
+                System.out.println("hey");
                 bWall = new boolean[lin][col];
                 bWall = breakableWall(Server.players,lin,col, 0.8);
                 Server.ok = true;
@@ -81,8 +82,11 @@ class Handler extends Thread {
                 o.flush();
 
             while (true) {
-                msg = i.readUTF();
-                broadcast(msg);
+                p = i.readInt();
+                x = i.readInt();
+                y = i.readInt();
+                drop = i.readBoolean();
+                broadcast (p,x,y,drop);
             }
         } catch (IOException ex) {
             ex.printStackTrace ();
@@ -135,8 +139,7 @@ class Handler extends Thread {
         return bWall;
     }
 
-    // protected static void broadcast (int p, int x, int y, boolean drop) {
-    protected static void broadcast (String msg) {
+    protected static void broadcast (int p, int x, int y, boolean drop) {
     
         synchronized (handlers) {
             Enumeration e = handlers.elements ();
@@ -145,11 +148,10 @@ class Handler extends Thread {
                 Handler c = (Handler) e.nextElement ();
                 try {
                     synchronized (c.o) {
-                        // c.o.writeInt(p);
-                        // c.o.writeInt(x);
-                        // c.o.writeInt(y);
-                        // c.o.writeBoolean(drop);
-                        c.o.writeUTF(msg);
+                        c.o.writeInt(p);
+                        c.o.writeInt(x);
+                        c.o.writeInt(y);
+                        c.o.writeBoolean(drop);
                     }
                     c.o.flush ();
                 } catch (IOException ex) { }

@@ -23,7 +23,7 @@ public class GameRun extends GameBase {
 	
 	int posX, posY;
 	boolean dropped;
-	
+	boolean[][] bWall;
 	
 	int cont=0;
 
@@ -48,19 +48,20 @@ public class GameRun extends GameBase {
 
 		boolean start = false;
 		do{
-			PLAYERS = i.readInt(); 
+			PLAYERS = i.readInt();
 			start = i.readBoolean();
         }while(!start);
 
 		for (int i = 1; i <= PLAYERS; i++)
 			bombers.put(i,new Bomber(i, width, height));
+			// System.out.println("hey");
 
 		int lin = height/50, col = width/50, m,n;
 		o.writeInt(lin);
 		o.writeInt(col);
 		o.flush();
-
-		boolean[][] bWall = new boolean[lin][col];
+		
+		bWall = new boolean[lin][col];
 		for (m=0; m<lin; m++)
         	for (n=0; n<col; n++)
         		bWall[m][n] = i.readBoolean();
@@ -86,39 +87,43 @@ public class GameRun extends GameBase {
 		try {
 
     	for (int n=0; n<PLAYERS; n++){
+			// p = i.readInt();
+  	// 	  	x = i.readInt();
+  	// 	  	y = i.readInt();
+  	// 	  	drop = i.readBoolean();
+    		Scanner msg = new Scanner(i.readUTF());
+    		//System.out.println(msg);
+    		System.out.println(msg.nextInt());
+    		System.out.println(msg.nextInt());
+    		System.out.println(msg.nextInt());
+    		// System.out.println(msg.nextInt());
 
-    		String str = i.readUTF();
-    		Scanner msg = new Scanner(str).useDelimiter("#");
-
-    		p = msg.nextInt();
-    		x = msg.nextInt();
-    		y = msg.nextInt();
-    		drop = msg.nextBoolean();
-
-
-  		  	if (p!= PLAYER){
-	  		  	bomber = bombers.get(p);
-	  		  	bomber.setPosX(x);
-	  		  	bomber.setPosY(y);
-	  		  	if(drop)
-	  		  		bombs.add(bomber.dropBomb());
-  		  	}
+  		  	// if (p!= PLAYER){
+	  		  // 	bomber = bombers.get(p);
+	  		  // 	bomber.setPosX(x);
+	  		  // 	bomber.setPosY(y);
+	  		  // 	if(drop)
+	  		  // 		bombs.add(bomber.dropBomb());
+  		  	// }
 
 		}	
 		} catch (IOException ex) {
-    		ex.printStackTrace ();
+        		ex.printStackTrace ();
         }
     }
 
 	public void sendMsg(Integer posX, Integer posY, Boolean drop){
 		try {
-
+   //          o.writeInt(PLAYER);
+			// o.writeInt(x);
+			// o.writeInt(y);
+			// o.writeBoolean(drop);
 			String b = drop.toString();
 			String x = posX.toString();
 			String y = posY.toString();
 			Integer pl = PLAYER;
 			String p = pl.toString();
-			String msg = p+"#"+x+"#"+y+"#"+b;
+			String msg = p+x+y+b;
 			o.writeUTF(msg);
             o.flush ();
         } catch (IOException ex) {
@@ -137,47 +142,53 @@ public class GameRun extends GameBase {
 		up = key.isPressed(keys[2]);
 		down = key.isPressed(keys[3]);
 		space = key.button(keys[4]);
-		
-		bomber = bombers.get(PLAYER);
-		
-		if(right && !bomber.oneDirection() && !left)
-			bomber.moveRight(RIGHT_BOUND);
-			else bomber.isMovingRight = false;
-		if(left && !bomber.oneDirection() && !right)
-			bomber.moveLeft(LEFT_BOUND);
-			else bomber.isMovingLeft = false;
-		if(up && !bomber.oneDirection() && !down)
-			bomber.moveUp(TOP_BOUND);
-			else bomber.isMovingUp = false;
-		if(down && !bomber.oneDirection() && !up)
-			bomber.moveDown(BOTTOM_BOUND);
-			else bomber.isMovingDown = false;
 
-		if(space){
-			if (bomber.bombs < bomber.max){
-				if (bomb_aux == null || bombs.size() == 0){
-					bomb_aux = bomber.dropBomb();
-					bombs.add(bomb_aux);
-					dropped = true;
-				}
-				else if (!bomber.inside(bomb_aux)){
-					bombs.add(bomber.dropBomb());
-					dropped = true;
+		//for(Map.Entry<Integer, Bomber> b : bombers.entrySet()){
+			// bomber = b.getValue();
+			// str2buttons(msg_others[b.getKey()-1]);			
+			bomber = bombers.get(PLAYER);
+			
+			if(right && !bomber.oneDirection() && !left)
+				bomber.moveRight(RIGHT_BOUND);
+				else bomber.isMovingRight = false;
+			if(left && !bomber.oneDirection() && !right)
+				bomber.moveLeft(LEFT_BOUND);
+				else bomber.isMovingLeft = false;
+			if(up && !bomber.oneDirection() && !down)
+				bomber.moveUp(TOP_BOUND);
+				else bomber.isMovingUp = false;
+			if(down && !bomber.oneDirection() && !up)
+				bomber.moveDown(BOTTOM_BOUND);
+				else bomber.isMovingDown = false;
+
+			if(space){
+				if (bomber.bombs < bomber.max){
+					if (bomb_aux == null || bombs.size() == 0){
+						bomb_aux = bomber.dropBomb();
+						bombs.add(bomb_aux);
+						dropped = true;
+					}
+					else if (!bomber.inside(bomb_aux)){
+						bombs.add(bomber.dropBomb());
+						dropped = true;
+					}
 				}
 			}
-		}
-		bomber.reset();
+			bomber.reset();
 
-		posX = bomber.posX;
-		posY = bomber.posY;
-}
+			posX = bomber.posX;
+			posY = bomber.posY;
+		//}
+	}
 
 
 	public void paint(Graphics g){
+		//System.out.println(++cont);
 		Bomber bomber;
 
 		action();
 		sendMsg(posX, posY, dropped);
+		//receiveMsg(posX, posY, dropped);
 		others();
 		
 		for (Map.Entry<Integer, Bomber> b : bombers.entrySet()){
