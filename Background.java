@@ -63,8 +63,8 @@ public class Background extends JPanel {
 	    //System.out.println(lin+" "+col);
 
 		try {
-		    img = ImageIO.read(new File("background.png"));
-		    breakable = ImageIO.read(new File("breakable.png"));
+		    img = ImageIO.read(new File("pictures/background"+players+".png"));
+		    breakable = ImageIO.read(new File("pictures/breakable.png"));
 	    } catch (IOException e) {
 		    System.exit(1);
 	    }

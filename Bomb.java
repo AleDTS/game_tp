@@ -16,8 +16,8 @@ public class Bomb extends Interactible {
 		if (img == null && explosion == null){
 			//loadImage("bomb.png", img);
 		try {
-        	img = ImageIO.read(new File("bomb.png"));
-        	explosion = ImageIO.read(new File("explosion.png"));
+        	img = ImageIO.read(new File("pictures/bomb.png"));
+        	explosion = ImageIO.read(new File("pictures/explosion.png"));
       	} catch (IOException e) {
 	      	System.out.println("Nao foi possivel carregar ");
 	        System.exit(1);

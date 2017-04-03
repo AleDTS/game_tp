@@ -21,14 +21,15 @@ public class GameRun extends GameBase {
 	public int mSec;
 	public String msg;
 	
-	int posX, posY;
+	public Boolean win = false;
+	int posX, posY, winner;
 	boolean dropped;
 	
 	
 	int cont=0;
 
 	KeyEvent k;
-	int[] keys = {k.VK_RIGHT, k.VK_LEFT, k.VK_UP, k.VK_DOWN, k.VK_SPACE};
+	int[] keys = {k.VK_RIGHT, k.VK_LEFT, k.VK_UP, k.VK_DOWN, k.VK_SPACE, k.VK_Q};
 	Keys key = new Keys(keys);
 	Queue<Bomb> bombs = new ConcurrentLinkedQueue<Bomb>();
 	Map<Integer, Bomber> bombers = new HashMap<Integer, Bomber>();
@@ -37,7 +38,7 @@ public class GameRun extends GameBase {
 	public GameRun(Socket socket) throws IOException{
 		this.o = new DataOutputStream (socket.getOutputStream ());
         this.i = new DataInputStream (socket.getInputStream ());
-		setSize(width = 850,height = 650);
+		setSize(650,650);
 		key.add();
 		TOP_BOUND = 0;
 		BOTTOM_BOUND = height;
@@ -74,15 +75,24 @@ public class GameRun extends GameBase {
 	}
 
 	public void close(){
-		open = false;
-		System.out.println("tchau!");
+		try{
+			o.writeUTF("close");
+			o.flush();
+		} catch (IOException ex) {
+
+        }
+	}
+
+	public void finish(Graphics g){
+		finish = true;
+		System.out.println("Player " +winner+ " wins!");
 	}
 
     public void others(){
     	Bomber bomber;
     		int p;
 		int x, y;
-		boolean drop;
+		boolean drop, w;
 		try {
 
     	for (int n=0; n<PLAYERS; n++){
@@ -90,11 +100,11 @@ public class GameRun extends GameBase {
     		String str = i.readUTF();
     		Scanner msg = new Scanner(str).useDelimiter("#");
 
+    		w = msg.nextBoolean();
     		p = msg.nextInt();
     		x = msg.nextInt();
     		y = msg.nextInt();
     		drop = msg.nextBoolean();
-
 
   		  	if (p!= PLAYER){
 	  		  	bomber = bombers.get(p);
@@ -102,8 +112,11 @@ public class GameRun extends GameBase {
 	  		  	bomber.setPosY(y);
 	  		  	if(drop)
 	  		  		bombs.add(bomber.dropBomb());
+	  		  	if(w){
+	  		  		win = w;
+	  		  		winner = p;
+	  		  	}
   		  	}
-
 		}	
 		} catch (IOException ex) {
     		ex.printStackTrace ();
@@ -112,13 +125,13 @@ public class GameRun extends GameBase {
 
 	public void sendMsg(Integer posX, Integer posY, Boolean drop){
 		try {
-
 			String b = drop.toString();
 			String x = posX.toString();
 			String y = posY.toString();
+			String w = win.toString();
 			Integer pl = PLAYER;
 			String p = pl.toString();
-			String msg = p+"#"+x+"#"+y+"#"+b;
+			String msg = w+"#"+p+"#"+x+"#"+y+"#"+b;
 			o.writeUTF(msg);
             o.flush ();
         } catch (IOException ex) {
@@ -129,7 +142,7 @@ public class GameRun extends GameBase {
 	public void action(){
 		Bomber bomber;
 		Bomb bomb_aux = null;
-		boolean up, down, right, left, space;
+		boolean up, down, right, left, space, q;
 		dropped = false;
 
 		right = key.isPressed(keys[0]);
@@ -137,9 +150,12 @@ public class GameRun extends GameBase {
 		up = key.isPressed(keys[2]);
 		down = key.isPressed(keys[3]);
 		space = key.button(keys[4]);
-		
+		q = key.isPressed(keys[5]);
+
+
 		bomber = bombers.get(PLAYER);
 		
+
 		if(right && !bomber.oneDirection() && !left)
 			bomber.moveRight(RIGHT_BOUND);
 			else bomber.isMovingRight = false;
@@ -166,6 +182,11 @@ public class GameRun extends GameBase {
 				}
 			}
 		}
+
+		if (q || bomber.win()){
+			win = true;
+			winner = PLAYER;
+		}
 		bomber.reset();
 
 		posX = bomber.posX;
@@ -175,6 +196,7 @@ public class GameRun extends GameBase {
 
 	public void paint(Graphics g){
 		Bomber bomber;
+		int p = 0;
 
 		action();
 		sendMsg(posX, posY, dropped);
@@ -214,7 +236,6 @@ public class GameRun extends GameBase {
 		for(Bomb i : bombs)
 			i.draw(g);
 
-		
 		for(Bomb i : bombs){					//Explosion
 			if (i.remove == true){
 				i.drawExplosion(g);
@@ -231,6 +252,14 @@ public class GameRun extends GameBase {
 		for (Map.Entry<Integer, Bomber> b : bombers.entrySet()){
 			bomber = b.getValue();
 			bomber.draw(g);
+		}
+		//System.out.println(win);
+		if (win == true){
+			g.setColor(Color.RED);
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 30)); 
+			g.drawString("Player " +winner+ " wins!",50,100);
+			System.out.println("Player " +winner+ " wins!");
+			finish = true;
 		}
 	}
 
@@ -250,6 +279,8 @@ public class GameRun extends GameBase {
 	}
 
 	public static void main (String args[]) throws IOException {
+		if (args.length != 2)
+            throw new RuntimeException ("Syntax: GameRun <adress> <port>");
       	Socket s = new Socket (args[0], Integer.parseInt(args[1]));
       	GameRun game = new GameRun(s);
       	new Start(game,game.player(), width, height);

@@ -1,6 +1,6 @@
 
 public class Bomber extends Interactible {
-	int player, lin, col;
+	int player, lin, col, posWX, posWY;
 	int max = 3;
 	static int intensity = 5;
 	boolean isMovingRight, isMovingLeft, isMovingUp, isMovingDown;
@@ -13,13 +13,30 @@ public class Bomber extends Interactible {
 		col = width/50;
 		//System.out.println(lin+" "+col);
 		switch (player){
-			case 1: posX = posY = 0; break;
-			case 2: posY = 0; 			posX = (col-1)*50; break;
-			case 3: posY = (lin-1)*50; 	posX = 0; break;
-			case 4: posY = (lin-1)*50; 	posX = (col-1)*50; break;
+			case 1: 
+				posX = posY = 0; 
+				posWX = (col-1)*50; posWY = ((int)lin/2)*50;
+				// posWX = (height-50)/2;posWY = width-50;
+				break;
+			case 2: 
+				posY = 0; posX = (col-1)*50; 
+				posWX = ((int)col/2)*50; posWY = (lin-1)*50;
+				// posWX = height-50; posWY = (width-50)/2;
+				break;
+			case 3: 
+				posY = (lin-1)*50; 	posX = 0; 
+				posWX = 0; posWY = ((int)lin/2)*50;
+				// posWX = (height-50)/2; posWY = 0;
+				break;
+			case 4: 
+				posY = (lin-1)*50; 	posX = (col-1)*50; 
+				posWX = ((int)col/2+1)*50; posWY = 0;
+				// posWX = 0; posWY = (width-50)/2;
+				break;
 		}
+		// System.out.println(posWX +" "+ posWY);
 		
-		loadImage("bomber"+player+".png");
+		loadImage("pictures/bomber"+player+".png");
 	    height = img.getHeight(this);
 	    width = img.getHeight(this);
 	    //System.out.println(player +" "+ posX +" "+ posY);
@@ -58,8 +75,12 @@ public class Bomber extends Interactible {
 		posY = y;
 	}
 
+	public boolean win(){
+		return (posX == posWX && posY == posWY);
+	}
+
 	public void hitted(){
-		System.out.println("Player "+player+" dead!");
+		// System.out.println("Player "+player+" dead!");
 
 		switch (player){
 			case 1: posX = posY = 0; break;

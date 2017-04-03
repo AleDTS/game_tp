@@ -4,27 +4,30 @@ import java.util.*;
 
 public class Server {
     public static int players = 0;
+    public static int currentPlayers = 0;
     public static boolean start, ok = false;
     public boolean [][] bWall;
 
-    public Server (int port) throws IOException, ClassNotFoundException {
+    public Server (int port, int players) throws IOException, ClassNotFoundException {
         ServerSocket server = new ServerSocket (port);
-        
+        this.players = players;
         boolean start = false;
 
         while(true){
             Socket client = server.accept ();
             System.out.println ("Accepted from " + client.getInetAddress ());
-            ++players;
+            ++currentPlayers;
             Handler c = new Handler (client);
             c.start ();
         }
     }
 
     public static void main (String args[]) throws IOException, ClassNotFoundException {
-        if (args.length != 1)
-            throw new RuntimeException ("Syntax: Server <port>");
-        new Server (Integer.parseInt (args[0]));
+        if (args.length != 2)
+            throw new RuntimeException ("Syntax: Server <port> <players>");
+        if (Integer.parseInt(args[1]) > 4)
+            throw new RuntimeException ("1-4 players!");
+        new Server (Integer.parseInt(args[0]), Integer.parseInt(args[1]) );
     }
 }
 
@@ -54,13 +57,13 @@ class Handler extends Thread {
         try {
             handlers.addElement (this);
 
-            o.writeInt(player = Server.players);
+            o.writeInt(player = Server.currentPlayers);
             o.flush();
            
             do{           
-                if (Server.players == 2)
+                if (Server.currentPlayers == Server.players)
                     start = true;
-                o.writeInt(Server.players);
+                o.writeInt(Server.currentPlayers);
                 o.writeBoolean(start);
                 o.flush();
             }while(!start);
@@ -71,7 +74,7 @@ class Handler extends Thread {
 
             if(!(Server.ok)){
                 bWall = new boolean[lin][col];
-                bWall = breakableWall(Server.players,lin,col, 0.8);
+                bWall = breakableWall(Server.currentPlayers,lin,col, 0.8);
                 Server.ok = true;
             }
 
@@ -80,10 +83,13 @@ class Handler extends Thread {
                     o.writeBoolean(bWall[m][n]);
                 o.flush();
 
-            while (true) {
+            boolean stop = false;
+            do{
                 msg = i.readUTF();
+                if (msg.equals("close"))
+                    stop = true;
                 broadcast(msg);
-            }
+            }while(!stop);
         } catch (IOException ex) {
             ex.printStackTrace ();
         } 
@@ -98,13 +104,6 @@ class Handler extends Thread {
         } 
     }
 
-    public boolean readMsg(String msg){
-        if (msg.equals("close"))
-            return false;
-        else
-            return true;
-    }
-
     public boolean[][] breakableWall(int players, int lin, int col, double prob){
         boolean notHere = false;
         int i = 0, j = 0;
@@ -116,11 +115,15 @@ class Handler extends Thread {
                     continue;
                 else {
                     if (
-(players >= 1 && (i>=0 && i<3 && j==0) || (j>=0 && j < 3 && i == 0) ) ||
-(players >= 2 && (i>=0 && i<3 && j==(col-1)) || (j>=(col-3) && j < col && i == 0)) ||
-(players >= 3 && (i>=(lin-3) && i < lin && j == 0) || (j>=0 && j < 3 && i == (lin-1))) ||
-(players >= 2 && (i>=(lin-3) && i < lin && j == (col-1)) || (j>=(col-3) && j < col && i == (lin-1)))
-                    )   notHere = true;
+(players >= 1 && (i>=0 && i<3 && j==0) || 
+    (j>=0 && j < 3 && i == 0)   ||   (i == (int)lin/2 && j == col-1)) ||
+(players >= 2 && (i>=0 && i<3 && j==(col-1)) || 
+    (j>=(col-3) && j < col && i == 0) || (i == lin-1 && j == (int)col/2) ||
+(players >= 3 && (i>=(lin-3) && i < lin && j == 0) || 
+    (j>=0 && j < 3 && i == (lin-1)) || (i == (int)lin/2 && j == 0)) ||
+(players >= 2 && (i>=(lin-3) && i < lin && j == (col-1)) || 
+    (j>=(col-3) && j < col && i == (lin-1)) || (i == 0 && j == (int)col/2))))
+                        notHere = true;
                     else
                         notHere = false;
                     
@@ -135,7 +138,6 @@ class Handler extends Thread {
         return bWall;
     }
 
-    // protected static void broadcast (int p, int x, int y, boolean drop) {
     protected static void broadcast (String msg) {
     
         synchronized (handlers) {
@@ -145,10 +147,6 @@ class Handler extends Thread {
                 Handler c = (Handler) e.nextElement ();
                 try {
                     synchronized (c.o) {
-                        // c.o.writeInt(p);
-                        // c.o.writeInt(x);
-                        // c.o.writeInt(y);
-                        // c.o.writeBoolean(drop);
                         c.o.writeUTF(msg);
                     }
                     c.o.flush ();

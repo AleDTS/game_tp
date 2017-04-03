@@ -12,6 +12,7 @@ public class GameBase extends Canvas {
 	public static int FPS = 60;
 	public static int width;
 	public static int height;
+	public static boolean finish = false;
 
 	Image offscreen = null;
 	Graphics offgraphics = null;
@@ -98,20 +99,26 @@ public class GameBase extends Canvas {
 	
 	class Frame implements ActionListener {
 		public int frame;
+		Timer t;
 		public Frame(int fps){
-			Timer t = new Timer(1000/fps, this);
+			t = new Timer(1000/fps, this);
 			t.setInitialDelay(0);
 			t.setCoalesce(true);
 			t.start();
 		}
 		
 		public void actionPerformed(ActionEvent e){
-			repaint();
+			if (finish)
+				t.stop();
+			else
+				repaint();
 			frame++;
 			if (frame == (FPS+1))
 				frame = 0;
 			//System.out.println(frame);
 		}
+
+
 	}
 
 }
@@ -129,7 +136,7 @@ class Start extends JFrame {
 		setResizable(false);
       	setFocusable(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		addWindowListener( new WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
                 canvas.close();
                 System.exit(0);
